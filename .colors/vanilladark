@@ -1,0 +1,44 @@
+!! Vanilla Dark Color Scheme by Robert Kallgren
+
+!! background	= Background color
+!! color0/black = Highlight color
+!! color7/white = Secondary text color
+!! foreground	= Primary text color
+
+*background:	#222222
+*foreground:	#999999
+*cursorColor:	#9BBBE2
+*colorUL:	#9BBBE2
+
+!! Black
+*color0:  #444444
+*color8:  #B3B3B3
+
+!! Red
+*color1:  #FF807A
+*color9:  #FF605A
+
+!! Green
+*color2:  #b4c158
+*color10: #94c138
+
+!! Yellow
+*color3:  #F59335
+*color11: #F59335
+
+!! Blue 
+*color4:  #9BBBE2
+*color12: #9BBBE2
+!! *color12: #BBDBE2
+
+!! Magenta
+*color5:  #FEC7CD
+*color13: #D2A4B4
+
+!! Cyan 
+*color6:  #95C1C0
+*color14: #75A1A0
+
+!! White
+*color7:  #666666
+*color15: #909090

@@ -1,0 +1,35 @@
+Fonts
+=====
+Change sans and sans-serif to Verdana in /etc/fonts/fonts.conf
+ttf-ms-fonts
+terminus-font
+
+Programs
+========
+wmfs
+slim
+slock
+feh
+rxvt-unicode
+tmux
+emacs
+conky
+scrot
+chromium
+keepassx
+archey
+epdfview
+lm-sensors?
+pm-utils
+
+Sudoers
+=======
+sudo visudo
+kallgren ALL=NOPASSWD:/usr/sbin/pm-suspend
+
+Audio
+=====
+(alsamixer)
+(sudo usermod -a -G audio kallgren / sudo adduser kallgren audio)
+pacmd list-sinks
+pacmd set-default-sink 0

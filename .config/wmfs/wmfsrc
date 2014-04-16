@@ -1,0 +1,294 @@
+#
+# WMFS2 configuration file
+#
+
+# Possible file inclusion:
+# @include "file"
+
+# Multi theme section
+
+[themes]
+
+  [theme]
+     # No name mean default
+     # name = "default"
+
+     font = "-*-terminus-medium-*-*-*-12-*-*-*-*-*-*-*"
+
+     # Bars
+     bars_width = 20
+     bars_fg = "#707070"
+     bars_bg = "#F3F3F3"
+
+     # Element tags
+     tags_normal_fg = "#B3B3B3"
+     tags_normal_bg = "#F3F3F3"
+     # tags_normal_statusline = ""
+
+     tags_sel_fg    = "#707070"
+     tags_sel_bg    = "#F3F3F3"
+     # tags_sel_statusline = ""
+
+     tags_occupied_fg = "#B3B3B3"
+     tags_occupied_bg = "#F3F3F3"
+     # tags_occupied_statusline = "\R[0;0;100;1;#999999]"
+
+     tags_urgent_fg    = "#000000"
+     tags_urgent_bg    = "#FEA63C"
+     # tags_urgent_statusline = ""
+
+     tags_border_color = "#B3B3B3"
+     tags_border_width = 0
+
+     # Frame / Client
+     client_normal_fg = "#707070"
+     client_normal_bg = "#B3B3B3"
+     # client_normal_statusline = "\s[3;9;#121212;x] \s[2;8;#ff0000;x](1;client_close)"
+
+     client_sel_fg = "#707070"
+     client_sel_bg = "#9BBBE2"
+     # client_sel_statusline = "\s[3;9;#121212;x] \s[2;8;#ff0000;x](1;client_close)"
+
+     # client_free_statusline = ""
+
+     frame_bg = "#707070"
+     client_titlebar_width = 1
+     client_border_width = 1
+
+   [/theme]
+
+[/themes]
+
+[bars]
+
+  # Position:
+  #
+  # 0  Top
+  # 1  Bottom
+  # 2  Hide
+
+  # Element type:
+  #
+  # t  Tags
+  # s  Statustext (will take available space)
+  # y  Systray (can be set only ONE time among all element)
+  # l  Launcher (will be expended at launcher use)
+
+  [bar]
+     name = "top"
+     position = 0
+     screen = 0
+     elements = "tlsy"   # element order in bar
+     theme = "default"
+  [/bar]
+
+# [bar]
+#    position = 0
+#    screen = 1
+#    elements = "ts"
+#    theme = "default"
+# [/bar]
+
+[/bars]
+
+[tags]
+
+  # Tag wrapping navigation
+  circular = false
+
+  # Use no screen option or screen = -1 to set tag on each screen
+  [tag]
+      name = "code"
+      screen = 0
+      # statusline=""
+  [/tag]
+
+  [tag]
+      name = "web"
+      screen = 0
+  [/tag]
+
+  [tag]
+      name = "+"
+      screen = 0
+  [/tag]
+
+  # Mousebinds associated to Tags element button
+  [mouse] button = "1" func = "tag_click" [/mouse]
+  [mouse] button = "4" func = "tag_next"  [/mouse]
+  [mouse] button = "5" func = "tag_prev"  [/mouse]
+
+[/tags]
+
+[client]
+
+  # Padding between clients (default: 0) :
+  # padding = 20
+
+  # Give focus to new created client (default = false)
+  autofocus = true
+
+  theme = "default"
+  key_modifier = "Super"
+
+  # Focus type:
+  #  enter : focus follow mouse (default)
+  #  click : click to focus
+  #  everything-else : disable mouse focus support
+  focus = enter
+
+  [mouse] button = "1" func = "client_focus_click"    [/mouse]
+  [mouse] button = "1" func = "mouse_swap"            [/mouse]
+  [mouse] button = "2" func = "mouse_tab"             [/mouse]
+  [mouse] button = "3" func = "mouse_resize"          [/mouse]
+  [mouse] button = "4" func = "client_focus_next_tab" [/mouse]
+  [mouse] button = "5" func = "client_focus_prev_tab" [/mouse]
+
+[/client]
+
+[rules]
+
+  [rule]
+      instance = "*"
+      # role   = ""
+      # name   = ""
+      # theme  = "default"
+      # screen = 0
+      free       = true
+      tab        = false
+      ignore_tag = false
+  [/rule]
+
+  [rule]
+      instance = "urxvt"
+      free     = true
+  [/rule]
+
+  [rule]
+      instance = "chromium"
+      screen   = 0
+      free     = false
+  [/rule]
+
+  [rule]
+      instance = "epdfview"
+      tab = true
+  [/rule]
+
+[/rules]
+
+[launchers]
+
+  # command can be an uicb function or an uicb function + extension (see example)
+  [launcher]
+     name = "exec"
+     prompt = " run:"
+     # Example of uicb + ext:
+     #   command = "spawn urxvt -e"
+     command = "spawn"
+     width = 400
+  [/launcher]
+
+  # brightness launcher
+  [launcher]
+     name    = "brightness"
+     prompt  = "brightness:"
+     command = "spawn ~/.scripts/brightness"
+     width   = 85
+  [/launcher]
+
+[/launchers]
+
+[keys]
+
+  # Start applications
+  [key] mod = {"Super"} key = "1" func = "spawn" cmd = "chromium-browser" [/key]
+  [key] mod = {"Super"} key = "t" func = "spawn" cmd = "urxvt" [/key]
+  [key] mod = {"Super"} key = "w" func = "spawn" cmd = "urxvt -e ssh celsius" [/key]
+  [key] mod = {"Super"} key = "b" func = "spawn" cmd = "~/.scripts/brightness -i 10" [/key]
+  [key] mod = {"Super"} key = "c" func = "spawn" cmd = "~/.scripts/brightness -d 10" [/key]
+
+  # Launcher
+  [key] mod = {"Super"} key = "p" func = "launcher" cmd = "exec" [/key]
+  #  [key] mod = {"Super"} key = "b" func = "launcher" cmd = "brightness" [/key]
+
+  [key] mod = {"Control", "Alt"} key = "q" func = "quit" [/key]
+  [key] mod = {"Control", "Alt"} key = "r" func = "reload" [/key]
+
+  # Tag manipulation
+  [key] mod = {"Super"} key = "F1" func = "tag_set" cmd = "0" [/key]
+  [key] mod = {"Super"} key = "F2" func = "tag_set" cmd = "1" [/key]
+  [key] mod = {"Super"} key = "F3" func = "tag_set" cmd = "2" [/key]
+  [key] mod = {"Super"} key = "F4" func = "tag_set" cmd = "3" [/key]
+  [key] mod = {"Super"} key = "F5" func = "tag_set" cmd = "4" [/key]
+  [key] mod = {"Super"} key = "F6" func = "tag_set" cmd = "5" [/key]
+  [key] mod = {"Super"} key = "F7" func = "tag_set" cmd = "6" [/key]
+  [key] mod = {"Super"} key = "F8" func = "tag_set" cmd = "7" [/key]
+
+  [key] mod = {"Super", "Shift"} key = "F1" func = "tag_client" cmd = "0" [/key]
+  [key] mod = {"Super", "Shift"} key = "F2" func = "tag_client" cmd = "1" [/key]
+  [key] mod = {"Super", "Shift"} key = "F3" func = "tag_client" cmd = "2" [/key]
+  [key] mod = {"Super", "Shift"} key = "F4" func = "tag_client" cmd = "3" [/key]
+  [key] mod = {"Super", "Shift"} key = "F5" func = "tag_client" cmd = "4" [/key]
+  [key] mod = {"Super", "Shift"} key = "F6" func = "tag_client" cmd = "5" [/key]
+  [key] mod = {"Super", "Shift"} key = "F7" func = "tag_client" cmd = "6" [/key]
+  [key] mod = {"Super", "Shift"} key = "F8" func = "tag_client" cmd = "7" [/key]
+
+  # Tag / screen navigation
+  [key] mod = {"Super"} key = "Right" func = "tag_next" [/key]
+  [key] mod = {"Super"} key = "Left"  func = "tag_prev" [/key]
+  [key] mod = {"Control", "Alt"} key = "Right" func = "tag_next" [/key]
+  [key] mod = {"Control", "Alt"} key = "Left"  func = "tag_prev" [/key]
+  [key] mod = {"Super"} key = "v" func = "tag_next" [/key]
+  [key] mod = {"Super"} key = "x"  func = "tag_prev" [/key]
+
+  [key] mod = {"Super"} key = "q" func = "client_close" [/key]
+
+  # Focus next / prev client and next / prev tabbed client
+  [key] mod = { "Alt" }            key = "Tab" func = "client_focus_next" [/key]
+  [key] mod = { "Alt", "Shift" }   key = "Tab" func = "client_focus_prev" [/key]
+  [key] mod = { "Super" }          key = "Tab" func = "client_focus_next_tab" [/key]
+  [key] mod = { "Super", "Shift" } key = "Tab" func = "client_focus_prev_tab" [/key]
+
+  # Focus next client with direction
+  [key] mod = {"Alt"} key = "h" func = "client_focus_left"   [/key]
+  [key] mod = {"Alt"} key = "l" func = "client_focus_right"  [/key]
+  [key] mod = {"Alt"} key = "k" func = "client_focus_top"    [/key]
+  [key] mod = {"Alt"} key = "j" func = "client_focus_bottom" [/key]
+
+  # swap next client with direction:
+  [key] mod = {"Control", "Shift"} key = "h" func = "client_swap_left"   [/key]
+  [key] mod = {"Control", "Shift"} key = "l" func = "client_swap_right"  [/key]
+  [key] mod = {"Control", "Shift"} key = "k" func = "client_swap_top"    [/key]
+  [key] mod = {"Control", "Shift"} key = "j" func = "client_swap_bottom" [/key]
+
+  # Resize selected tiled client with direction
+  [key] mod = {"Super"} key = "h" func = "client_resize_left"   cmd = "20" [/key]
+  [key] mod = {"Super"} key = "l" func = "client_resize_left"   cmd = "-20" [/key]
+  [key] mod = {"Super"} key = "k" func = "client_resize_top"    cmd = "20" [/key]
+  [key] mod = {"Super"} key = "j" func = "client_resize_top"    cmd = "-20" [/key]
+  [key] mod = {"Super", "Control"} key = "h" func = "client_resize_right"  cmd = "-20" [/key]
+  [key] mod = {"Super", "Control"} key = "l" func = "client_resize_right"  cmd = "20" [/key]
+  [key] mod = {"Super", "Control"} key = "k" func = "client_resize_bottom" cmd = "-20" [/key]
+  [key] mod = {"Super", "Control"} key = "j" func = "client_resize_bottom" cmd = "20" [/key]
+
+  # Tabbing command
+  [key] mod = {"Alt", "Shift"} key = "h" func = "client_tab_left"   [/key]
+  [key] mod = {"Alt", "Shift"} key = "l" func = "client_tab_right"  [/key]
+  [key] mod = {"Alt", "Shift"} key = "k" func = "client_tab_top"    [/key]
+  [key] mod = {"Alt", "Shift"} key = "j" func = "client_tab_bottom" [/key]
+  [key] mod = {"Alt", "Shift"} key = "u" func = "client_untab" [/key]
+
+  # Layout manipulation
+  [key] mod = {"Super"}          key = "m" func = "layout_vmirror" [/key]
+  [key] mod = {"Super", "Shift"} key = "m" func = "layout_hmirror" [/key]
+  [key] mod = {"Super"}          key = "r" func = "layout_rotate_right" [/key]
+  [key] mod = {"Super", "Shift"} key = "r" func = "layout_rotate_left" [/key]
+
+  # Toggle client free/tile
+  [key] mod = {"Super"} key = "f" func = "client_toggle_free" [/key]
+
+  # Toggle client ignore_tag
+  [key] mod = {"Super", "Shift"} key = "f" func = "client_toggle_ignore_tag" [/key]
+
+[/keys]

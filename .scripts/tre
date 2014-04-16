@@ -1,0 +1,93 @@
+#!/bin/bash
+#
+# The classic tree command rewritten i bash, with horrible performance.
+
+dirs=0
+files=0
+
+levellimit=1000
+
+lsargs=
+
+version() {
+    echo "$(basename $0) v0.5.0 by Robert Källgren <insert@email.here>"
+}
+
+# $1 = Directory to loop through
+# $2 = Level counter
+# $3 = The name of the last file in the directory.
+# $4 = Indentation string
+loop() {
+    for file in $( ls $lsargs $1 )
+    do
+	if [ $file = $3 ]
+	then
+	    branch=└──
+	    indentation=    
+	else
+	    branch=├──
+	    indentation=│   
+	fi
+	
+	if [ -d $1/$file ]
+	then
+	    let dirs++
+	    echo -e "$4$branch \033[1;34m$file\033[0m"
+	    if [ $2 -lt $levellimit ]
+	    then
+		loop $1/$file $[$2+1] $(echo $(ls $lsargs $1/$file | tail -n 1)) $4$indentation
+	    fi
+	else
+	    let files++
+	    echo $4$branch $file
+	fi
+    done    
+}
+
+printdir() {
+    path=$1
+    
+    if [ -d $path ]
+    then
+	echo -e "\033[1;34m$1\033[0m"
+	loop $path 1 $(echo $(ls $lsargs $path | tail -n 1))
+    else
+	echo $path [error opening dir]
+    fi
+}
+
+# Entry point
+if [ $# -eq 0 ]
+then
+    printdir .
+else
+    while [ $# -gt 0 ]
+    do
+	case $1 in
+	    -a )
+		lsargs=-A $lsargs
+		;;
+	    -v | --version )
+		version
+		exit 1
+		;;
+	    -L )
+		if [ $2 -gt 0 ] 2>/dev/null
+		then
+		    levellimit=$2
+		    shift
+		else
+		    echo "$(basename $0): Invalid level, must be greater than 0."
+		    exit 0
+		fi
+		;;
+	    * )
+		printdir $1
+		;;
+	esac
+	shift
+    done
+fi
+
+echo
+echo "$dirs directories, $files files"

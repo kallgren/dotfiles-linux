@@ -1,0 +1,38 @@
+!! Erosion
+
+*background:	#181512
+*foreground:	#BEA492
+*cursorColor:	#93A1A1
+*colorUL:	#646A6D
+
+!! Black
+*color0:  #332D29
+*color8:  #817267
+
+!! Red
+*color1:  #8C644C
+*color9:  #9F7155
+
+!! Green
+*color2:  #C4BE90
+*color10: #BEC17E
+
+!! Yellow
+*color3:  #BFBA92
+*color11: #FAFAC0
+
+!! Blue 
+*color4:  #646A6D
+*color12: #626E74
+
+!! Magenta
+*color5:  #6D6871
+*color13: #756F7B
+
+!! Cyan 
+*color6:  #3B484A
+*color14: #444D4E
+
+!! White
+*color7:  #504339
+*color15: #9A875F

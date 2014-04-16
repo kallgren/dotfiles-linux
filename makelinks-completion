@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# Completions for makelinks
+
+# Allowed arguments
+files="$(cat ~/dotfiles/files)"
+
+_makelinks() {
+    local cur opts
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    COMPREPLY=( $(compgen -W "${files}" -- ${cur}) )
+}
+
+complete -F _makelinks makelinks

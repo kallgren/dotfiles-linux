@@ -1,0 +1,9 @@
+.bashrc
+.xinitrc
+.config/wmfs/wmfsrc
+.conkyrc
+.Xdefaults
+.colors
+.tmux.conf
+.emacs
+.scripts

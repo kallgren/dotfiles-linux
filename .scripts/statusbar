@@ -1,0 +1,3 @@
+#!/bin/sh
+
+conky -c ~/.conkyrc | while true; read line; do wmfs -c status "top $line"; done

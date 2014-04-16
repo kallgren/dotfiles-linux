@@ -1,0 +1,110 @@
+#!/bin/bash
+#
+# Make symbolic links for dotfiles.
+# Written by Robert Källgren.
+
+# Directories
+linkdir=~
+targetdir=~/dotfiles
+backupdir="$targetdir"_backup
+
+# Counter variables
+filesmoved=0
+fileslinked=0
+errors=0
+
+# Allowed files
+files="$(cat $targetdir/files)"
+
+# Print message
+error() {
+    echo "$(basename $0): $*"
+}
+
+# Create backup directory if not already existing
+make_backup_dir() {
+    if [ ! -d "$backupdir" ]; then
+	echo -n "Creating backup directory ..."
+	mkdir "$backupdir"
+	echo "done"
+    fi
+}
+
+# Move existing dotfiles to the backup directory
+backup() {    
+    for file in $*; do
+	if [ -e "$linkdir"/"$file" ]; then
+	    mv "$linkdir"/"$file" "$backupdir"
+	    if [ ! -e "$linkdir"/"$file" ]; then
+		let filesmoved++
+	    fi
+	fi
+    done
+}
+
+# Make symbolic links
+link() {
+    for file in $*; do
+	if [ -e "$targetdir"/"$file" ]; then
+	    mkdir -p "$linkdir"/"$(dirname $file)"
+	    ln -s "$targetdir"/"$file" "$linkdir"/"$file"
+	    let fileslinked++
+	    echo -e "\033[1;36m$linkdir/$file\033[0m -> $targetdir/$file"
+	else
+	    let errors++
+	    error "cannot access $targetdir/$file: No such file or directory"
+	fi
+    done    
+}
+
+# Main function
+main() {
+    if [ $# -eq 0 ]; then
+	error "No valid file given"
+	exit 1
+    fi
+
+    read -n 1 -p "You are about to create $# symlinks in $linkdir to files in $targetdir. Do you want to continue? (y/n) "
+    echo
+
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+	error "Aborted"
+	exit 0
+    fi
+
+    make_backup_dir
+    
+    echo
+    echo -n "Backing up existing files ..."
+    backup "$*"
+    echo "done"
+    
+    echo "Creating symbolic links ... "
+    echo
+    link "$*"
+    echo
+    echo "...all done"
+    
+    echo
+    echo "$filesmoved file(s) backed up to $backupdir/"
+    echo "$fileslinked symbolic link(s) created"
+    echo "$errors error(s)"
+}
+
+# Entry point
+if [ $# -gt 0 ]; then
+    filtered_files=
+
+    for file in $*; do
+	for allowed_file in $files; do
+	    if [ "$file" = "$allowed_file" ]; then
+		filtered_files="$filtered_files $file"
+		break
+	    fi
+	done
+    done
+    
+    files=$filtered_files
+fi
+
+main $files

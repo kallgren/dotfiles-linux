@@ -1,0 +1,16 @@
+!! Colors
+#include ".colors/vanillalight"
+
+!! Font
+URxvt*font:		xft:Terminus:pixelsize=8:antialias=false
+URxvt.boldFont:		xft:Terminus:pixelsize=8:antialias=false
+
+!! Basics
+URxvt*scrollBar:	false
+URxvt*saveLines:	3000
+URxvt*depth:		32
+
+!! Clickable URLs
+URxvt.perl-ext-common:	default,matcher
+URxvt.urlLauncher:	chromium
+URxvt.matcher.button:	1

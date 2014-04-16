@@ -1,0 +1,30 @@
+#!/bin/bash
+
+new=$1
+current=$(cat /sys/class/backlight/acpi_video0/brightness)
+
+# -i = increment
+# -d = decrement
+if [ $# -eq 2 ]
+then
+    if [ $1 = -i ]
+    then
+	new=$[ $current + $2] 
+    fi
+    if [ $1 = -d ]
+    then
+	new=$[ $current - $2]
+    fi   
+fi
+
+if [ $new -lt 0 ]
+then
+    new=0
+fi
+
+if [ $new -gt 95 ]
+then
+    new=95
+fi
+
+echo $new > /sys/class/backlight/acpi_video0/brightness
