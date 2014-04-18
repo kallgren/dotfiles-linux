@@ -6,7 +6,7 @@
 !! foreground	= Primary text color
 
 *background:	#222222
-*foreground:	#999999
+*foreground:	#AAAAAA
 *cursorColor:	#9BBBE2
 *colorUL:	#9BBBE2
 
@@ -19,8 +19,8 @@
 *color9:  #FF605A
 
 !! Green
-*color2:  #b4c158
-*color10: #94c138
+*color2:  #B4C158
+*color10: #94C138
 
 !! Yellow
 *color3:  #F59335

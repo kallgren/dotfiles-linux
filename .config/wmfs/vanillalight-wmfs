@@ -1,0 +1,47 @@
+[theme]
+   # No name mean default
+   # name = "default"
+
+   font = "-*-terminus-medium-*-*-*-12-*-*-*-*-*-*-*"
+
+   # Bars
+   bars_width = 20
+   bars_fg = "#707070"
+   bars_bg = "#F3F3F3"
+
+   # Element tags
+   tags_normal_fg = "#B3B3B3"
+   tags_normal_bg = "#F3F3F3"
+   # tags_normal_statusline = ""
+
+   tags_sel_fg    = "#707070"
+   tags_sel_bg    = "#F3F3F3"
+   # tags_sel_statusline = ""
+
+   tags_occupied_fg = "#B3B3B3"
+   tags_occupied_bg = "#F3F3F3"
+   # tags_occupied_statusline = "\R[0;0;100;1;#999999]"
+
+   tags_urgent_fg    = "#B3B3B3"
+   tags_urgent_bg    = "#FEA63C"
+   # tags_urgent_statusline = ""
+
+   tags_border_color = "#B3B3B3"
+   tags_border_width = 0
+
+   # Frame / Client
+   client_normal_fg = "#707070"
+   client_normal_bg = "#B3B3B3"
+   # client_normal_statusline = "\s[3;9;#121212;x] \s[2;8;#ff0000;x](1;client_close)"
+
+   client_sel_fg = "#707070"
+   client_sel_bg = "#9BBBE2"
+   # client_sel_statusline = "\s[3;9;#121212;x] \s[2;8;#ff0000;x](1;client_close)"
+
+   # client_free_statusline = ""
+
+   frame_bg = "#440000"
+   client_titlebar_width = 1
+   client_border_width = 1
+
+[/theme]

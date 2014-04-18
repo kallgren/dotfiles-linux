@@ -1,6 +1,6 @@
 .bashrc
 .xinitrc
-.config/wmfs/wmfsrc
+.config/wmfs
 .conkyrc
 .Xdefaults
 .colors
