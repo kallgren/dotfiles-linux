@@ -1,15 +1,10 @@
 # Kallgren's dotfiles
 
-## Standard installation
-
 ```bash
-cd
-git clone https://github.com/kallgren/dotfiles.git
-dotfiles/makelinks
+> cd ~
+> git clone https://github.com/kallgren/dotfiles.git
+> dotfiles/makelinks
 ```
-
-You will find eventual backups of old files in `~/dotfiles_backup`.
-
 
 ## Additional tips
 
@@ -24,6 +19,6 @@ You will find eventual backups of old files in `~/dotfiles_backup`.
 source ~/dotfiles/makelinks-completion
 ``` 
 
-## Screenshot(s)
+## Screenshot
 
 ![Screenshot](scrot.png "Screenshot")
