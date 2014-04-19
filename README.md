@@ -3,19 +3,13 @@
 ## Standard installation
 
 Go to your home directory:
-```bash
-cd
-```
+```bash cd ```
 
 Clone the repository:
-```bash
-git clone https://github.com/kallgren/dotfiles.git
-```
+```bash git clone https://github.com/kallgren/dotfiles.git ```
 
 Run the script:
-```bash
-dotfiles/makelinks
-```
+```bash dotfiles/makelinks ```
 
 You're done! You will find eventual backups of old files in `~/dotfiles_backup`.
 
