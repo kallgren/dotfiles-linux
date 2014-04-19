@@ -14,6 +14,7 @@ Run the script:
 ```bash
 dotfiles/makelinks
 ```
+
 You're done! You will find eventual backups of old files in `~/dotfiles_backup`.
 
 
