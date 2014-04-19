@@ -103,16 +103,20 @@ fi
 
 PATH=~/.scripts:$PATH
 
-BLUE='\[\e[34m\]'
-DEFAULT='\[\e[0m\]'
+parse_git_dirty() {
+    [[ $(git_status 2> /dev/null | tail -n1) != *"working directory clean"* ]] && echo "*"
+}
 
-PS1="${BLUE}\W>${DEFAULT} "
+parse_git_branch() {
+    git branch --no-color 2> /dev/null | sed -e "/^[^*]/d" -e "s/* \(.*\)/ [\1$(parse_git_dirty)]/"
+}
 
-# alias ls='ls -h --color=auto'
-alias work='ssh celsius'
-alias setbrightness='sudo chmod o+w /sys/class/backlight/acpi_video0/brightness'
-alias lock='sudo pm-suspend & slock'
-alias emacs='emacs -nw'
+BLUE='\[\033[34m\]'
+RED='\[\033[31m\]'
+GREEN='\[\033[32m\]'
+DEFAULT='\[\033[0m\]'
+
+PS1="${BLUE}\w${GREEN}\$(parse_git_branch)${BLUE}>${DEFAULT} "
 
 # Completions for makelinks
 source ~/dotfiles/makelinks-completion
