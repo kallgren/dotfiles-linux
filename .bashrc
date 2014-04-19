@@ -104,7 +104,7 @@ fi
 PATH=~/.scripts:$PATH
 
 parse_git_dirty() {
-    [[ $(git_status 2> /dev/null | tail -n1) != *"working directory clean"* ]] && echo "*"
+    [[ $(git status 2> /dev/null | tail -n1) != *"working directory clean"* ]] && echo "*"
 }
 
 parse_git_branch() {
