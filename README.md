@@ -26,7 +26,10 @@ You're done! You will find eventual backups of old files in `~/dotfiles_backup`.
 
 * You can link individual files by providing their names as arguments to the script.
 
-* Run ```bash source ~/dotfiles/makelinks-completion``` to get completions with the available files when running the script.
+* To get completions with the available files when running the script, run:
+```bash
+source ~/dotfiles/makelinks-completion
+``` 
 
 ## Screenshot(s)
 
