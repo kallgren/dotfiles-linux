@@ -19,6 +19,10 @@
 source ~/dotfiles/makelinks-completion
 ``` 
 
-## Screenshot
+## Screenshots
 
-![Screenshot](scrot.png "Screenshot")
+### Light theme
+![Light theme screenshot](scrot.png "Light Theme")
+
+### Dark theme
+Coming soon...
