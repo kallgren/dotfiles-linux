@@ -16,7 +16,7 @@
    # tags_normal_statusline = ""
 
    tags_sel_fg    = "#AAAAAA"
-   tags_sel_bg    = "#222222"
+   tags_sel_bg    = "#9BBBE2"
    # tags_sel_statusline = ""
 
    tags_occupied_fg = "#666666"
