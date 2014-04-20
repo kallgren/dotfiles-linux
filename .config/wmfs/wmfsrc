@@ -52,19 +52,21 @@
 
   # Use no screen option or screen = -1 to set tag on each screen
   [tag]
-      name = "♦"
+      name = "  "
       screen = 0
-      # statusline=""
+      statusline="^i[1;2;16;16;/home/kallgren/.config/wmfs/arch.png]"
   [/tag]
 
   [tag]
-      name = "♦"
+      name = "  "
       screen = 0
+      statusline ="^i[1;2;16;16;/home/kallgren/.config/wmfs/full.png]"
   [/tag]
 
   [tag]
-      name = "♦"
+      name = "  "
       screen = 0
+      statusline="^i[1;2;16;16;/home/kallgren/.config/wmfs/note.png]"
   [/tag]
 
   # Mousebinds associated to Tags element button
