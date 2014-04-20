@@ -52,18 +52,18 @@
 
   # Use no screen option or screen = -1 to set tag on each screen
   [tag]
-      name = "code"
+      name = "♦"
       screen = 0
       # statusline=""
   [/tag]
 
   [tag]
-      name = "web"
+      name = "♦"
       screen = 0
   [/tag]
 
   [tag]
-      name = "+"
+      name = "♦"
       screen = 0
   [/tag]
 
@@ -159,8 +159,8 @@
   [key] mod = {"Super"} key = "1" func = "spawn" cmd = "chromium-browser" [/key]
   [key] mod = {"Super"} key = "t" func = "spawn" cmd = "urxvt" [/key]
   [key] mod = {"Super"} key = "w" func = "spawn" cmd = "urxvt -e ssh celsius" [/key]
-  [key] mod = {"Super"} key = "b" func = "spawn" cmd = "~/.scripts/brightness -i 10" [/key]
-  [key] mod = {"Super"} key = "c" func = "spawn" cmd = "~/.scripts/brightness -d 10" [/key]
+  [key] mod = {"Super"} key = "plus" func = "spawn" cmd = "~/.scripts/brightness -i 10" [/key]
+  [key] mod = {"Super"} key = "minus" func = "spawn" cmd = "~/.scripts/brightness -d 10" [/key]
 
   # Launcher
   [key] mod = {"Super"} key = "p" func = "launcher" cmd = "exec" [/key]
