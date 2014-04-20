@@ -1,6 +1,9 @@
 # Navigation
 alias ls="ls -F"
 alias la="ls -Alh"
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
 
 # Other
 alias work="ssh celsius"
