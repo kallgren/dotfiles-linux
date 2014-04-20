@@ -118,5 +118,5 @@ DEFAULT='\[\033[0m\]'
 
 PS1="${BLUE}\w${GREEN}\$(parse_git_branch)${BLUE}>${DEFAULT} "
 
-# Completions for makelinks
-source ~/dotfiles/makelinks-completion
+# Completions for the bootstrap script
+source ~/dotfiles/bootstrap-completion
