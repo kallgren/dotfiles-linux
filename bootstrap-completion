@@ -5,10 +5,10 @@
 # Allowed arguments
 files="$(cat ~/dotfiles/files)"
 
-_makelinks() {
+_bootstrap() {
     local cur opts
     cur="${COMP_WORDS[COMP_CWORD]}"
     COMPREPLY=( $(compgen -W "${files}" -- ${cur}) )
 }
 
-complete -F _makelinks makelinks
+complete -F _bootstrap bootstrap
