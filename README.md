@@ -6,8 +6,15 @@
 > dotfiles/bootstrap
 ```
 
-## Information
-Coming soon...
+## Main Applications
+* wmfs²
+* conky
+* urxvt
+* tmux
+* emacs
+* chromium
+* scrot
+
 
 ## Screenshots
 
