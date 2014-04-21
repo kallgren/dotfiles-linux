@@ -1,6 +1,6 @@
 .bash_aliases
 .bashrc
-.xinitrc
+.xsession
 .config/wmfs
 .conkyrc
 .Xdefaults
