@@ -116,7 +116,7 @@ RED='\[\033[31m\]'
 GREEN='\[\033[32m\]'
 DEFAULT='\[\033[0m\]'
 
-PS1="${BLUE}\w${GREEN}\$(parse_git_branch)${BLUE}>${DEFAULT} "
+PS1="${BLUE}\w${GREEN}\$(parse_git_branch)${BLUE} »${DEFAULT} "
 
 # Completions for the bootstrap script
 source ~/dotfiles/bootstrap-completion
