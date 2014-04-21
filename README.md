@@ -19,7 +19,7 @@
 ## Screenshots
 
 ### Light theme
-![Light theme screenshot](scrot.png "Light Theme")
+![Light theme screenshot](scrot-light.png "Light Theme")
 
 ### Dark theme
-Coming soon...
+![Dark theme screenshot](scrot-dark.png "Dark Theme")
