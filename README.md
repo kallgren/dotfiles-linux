@@ -13,6 +13,7 @@
 * tmux
 * emacs
 * chromium
+* git
 * scrot
 
 
@@ -35,5 +36,3 @@
 ## Credits to
 * [TheImmortalPhoenix's WMFS setup](https://raw.githubusercontent.com/wiki/xorg62/wmfs/user-config/screenshots/theimmortalphoenix_20120406.png)
 * [The Solarized color scheme philosophy](http://ethanschoonover.com/solarized)
-
-More to come...
