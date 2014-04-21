@@ -1,0 +1,38 @@
+background no
+out_to_x no
+out_to_console yes
+update_interval 1
+total_run_times 0
+short_units yes
+if_up_strictness address
+
+TEXT
+^s[right;\#9BBBE2; ${downspeed wlan0}] ^s[right;\#999999; / ] ^s[right;\#9BBBE2;${upspeed wlan0}]\
+^s[right;\#666666; | ]\
+^s[right;${if_match ${acpitemp} >= 60 }\#E84F4F${else}\#9BBBE2${endif};${acpitemp}°]\
+^s[right;\#666666; | ]\
+^s[right;\#999999;CPU ] ^s[right;${if_match ${cpu} >= 50 }\#E84F4F${else}\#9BBBE2${endif};${cpu}%]\
+^s[right;\#666666; | ]\
+^s[right;\#999999;RAM ] ^s[right;${if_match $memperc >= 50 }\#E84F4F${else}\#9BBBE2${endif};$memperc%]\
+(1;status_surface;1050,20,90,22,\#9BBBE2 ^R[1;1;88;20;\#000000] ^s[left;\#999999; ${mem} / ${memmax}])\
+^s[right;\#666666; | ]\
+^s[right;\#999999;HDD ] ^s[right;${if_match ${fs_used_perc /home} > 50 }\#E84F4F${else}\#9BBBE2${endif};${fs_used_perc /home}%]\
+(1;status_surface;1110,20,90,22,\#9BBBE2 ^R[1;1;88;20;\#000000] ^s[left;\#999999; ${fs_used /home} / ${fs_size /home}])\
+^s[right;\#666666; | ]\
+^s[right;\#999999;WIFI ] ^s[right;${if_match ${wireless_link_qual_perc wlan0} < 30 }\#E84F4F${else}\#9BBBE2${endif};${wireless_link_qual_perc wlan0}%]\
+^s[right;\#666666; | ]\
+^s[right;\#999999;BAT ] ^s[right;${if_match ${battery_percent BAT1} < 20 }\#E84F4F${else}\#9BBBE2${endif};${battery_percent BAT1}%]\
+(1;status_surface;1240,20,75,22,\#9BBBE2 ^R[1;1;73;20;\#000000] ^s[left;\#999999; ${battery_time BAT1}])\
+^s[right;\#666666; | ]\
+^s[right;\#999999;DISP ] ^s[right;\#9BBBE2;${exec cat /sys/class/backlight/acpi_video0/brightness}%]\
+(1;spawn;~/.scripts/brightness -i 10)\
+(3;spawn;~/.scripts/brightness -i -10)\
+^s[right;\#666666; | ]\
+^s[right;\#999999;${time %H:%M:%S} ]\
+(1;status_surface;1366,20,500,300,\#9BBBE2 ^R[1;0;499;299;\#000000]\
+\
+^s[3;15;\#9BBBE2; ${time %A %d %B}]\
+^s[3;40;\#9BBBE2; File System:]\
+^s[3;55;\#999999; /       ${fs_used /} / ${fs_size /}]\
+^s[3;70;\#999999; /home   ${fs_used /home} / ${fs_size /home}]\
+^s[3;85;\#999999; swap    ${swap} / ${swapmax}])\

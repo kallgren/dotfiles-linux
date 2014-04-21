@@ -1,3 +1,9 @@
 #!/bin/sh
 
-conky -c ~/.conkyrc | while true; read line; do wmfs -c status "top $line"; done
+color="light"
+
+if [ $# -gt 0 -a $1 = "dark" ]; then
+    color="dark"
+fi
+    
+conky -c ~/.conkyrc_"$color" | while true; read line; do wmfs -c status "top $line"; done

@@ -2,7 +2,8 @@
 .bashrc
 .xsession
 .config/wmfs
-.conkyrc
+.conkyrc_light
+.conkyrc_dark
 .Xdefaults
 .colors
 .tmux.conf
