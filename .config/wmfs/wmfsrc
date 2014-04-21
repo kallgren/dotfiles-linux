@@ -9,7 +9,7 @@
 
 [themes]
 
-  @include "vanillalight-wmfs"
+  @include "vanilladark-wmfs"
 
 [/themes]
 
@@ -60,7 +60,7 @@
   [tag]
       name = "  "
       screen = 0
-      statusline ="^i[1;2;16;16;/home/kallgren/.config/wmfs/full.png]"
+      statusline ="^i[1;2;16;16;/home/kallgren/.config/wmfs/smiley.png]"
   [/tag]
 
   [tag]
