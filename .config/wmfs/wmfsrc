@@ -9,7 +9,7 @@
 
 [themes]
 
-  @include "vanilladark-wmfs"
+  @include "vanillalight-wmfs"
 
 [/themes]
 
