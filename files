@@ -4,6 +4,7 @@
 .config/wmfs
 .conkyrc-light
 .conkyrc-dark
+.compton.conf
 .Xdefaults
 .colors
 .tmux.conf
