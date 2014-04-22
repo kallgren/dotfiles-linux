@@ -1,0 +1,12 @@
+#!/bin/bash
+
+colors="#DDDDDD #444444"
+
+while true
+do
+    for color in $colors
+    do
+	hsetroot -solid $color
+	sleep 1
+    done
+done
