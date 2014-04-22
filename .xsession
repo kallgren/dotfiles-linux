@@ -7,8 +7,8 @@
 
 # ip set wlan0 up &
 
-# sh ~/.fehbg &
-xsetroot -solid "#DDDDDD" &
+hsetroot -solid "#DDDDDD" &
+compton -b
 
 sh ~/.scripts/statusbar &
 exec wmfs
