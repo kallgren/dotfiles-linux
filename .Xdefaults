@@ -1,5 +1,5 @@
 !! Colors
-#include ".colors/vanillalight"
+#include "/home/kallgren/.colors/vanillalight"
 
 !! Font
 URxvt*font:		xft:Terminus:pixelsize=8:antialias=false
