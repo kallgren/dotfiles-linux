@@ -1,0 +1,13 @@
+#!/bin/bash
+
+emacs -nw ~/.config/wmfs/wmfsrc ~/.Xdefaults +2:40
+
+if [ "$1" = "d" -o "$#" = "dark" ]; then
+    hsetroot -solid "#444444"
+    killall conky
+    nohup statusbar dark &
+else
+    hsetroot -solid "#DDDDDD"
+    killall conky
+    nohup statusbar &
+fi
