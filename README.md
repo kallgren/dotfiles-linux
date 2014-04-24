@@ -30,10 +30,9 @@
 
 ## Switching theme
 
+* Run ```flip```
 * Change `vanillalight` to `vanilladark` in .Xdefaults include.
 * Change `vanillalight-wmfs` to `vanilladark-wmfs` in wmfsrc import.
-* Execute `.scripts/statusbar dark` instead of just `.scripts/statusbar`
-* `hsetroot -solid "#444444"` instead of `#DDDDDD`
 
 ## Credits to
 * [TheImmortalPhoenix's WMFS setup](https://raw.githubusercontent.com/wiki/xorg62/wmfs/user-config/screenshots/theimmortalphoenix_20120406.png)
