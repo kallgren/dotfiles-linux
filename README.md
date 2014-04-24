@@ -22,10 +22,10 @@
 ## Screenshots
 
 ### Light theme
-![Light theme screenshot](scrot-light.png "Light Theme")
+![Light theme screenshot](https://raw.github.com/kallgren/dotfiles/master/scrot-light.png "Light Theme")
 
 ### Dark theme
-![Dark theme screenshot](scrot-dark.png "Dark Theme")
+![Dark theme screenshot](https://raw.github.com/kallgren/dotfiles/master/scrot-dark.png "Dark Theme")
 
 
 ## Switching theme
