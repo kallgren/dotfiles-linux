@@ -1,0 +1,22 @@
+#!/bin/bash
+
+current=$([[ $(grep vanillalight ~/.Xdefaults) != "" ]] && echo light || echo dark)
+
+if [[ $current == "light" ]]; then
+    substitution="s/vanillalight/vanilladark/"
+    bgcolor="#444444"
+    statusarg="dark"
+else
+    substitution="s/vanilladark/vanillalight/"
+    bgcolor="#DDDDDD"
+fi
+
+sed -i --follow-symlinks "$substitution" ~/.Xdefaults
+sed -i "$substitution" ~/.config/wmfs/wmfsrc
+
+killall conky
+nohup statusbar "$statusarg" &
+
+hsetroot -solid "$bgcolor"
+
+wmfs -c reload

@@ -22,18 +22,15 @@
 ## Screenshots
 
 ### Light theme
-![Light theme screenshot](scrot-light.png "Light Theme")
+![Light theme screenshot](https://raw.github.com/kallgren/dotfiles/master/scrot-light.png "Light Theme")
 
 ### Dark theme
-![Dark theme screenshot](scrot-dark.png "Dark Theme")
+![Dark theme screenshot](https://raw.github.com/kallgren/dotfiles/master/scrot-dark.png "Dark Theme")
 
 
 ## Switching theme
 
-* Change `vanillalight` to `vanilladark` in .Xdefaults include.
-* Change `vanillalight-wmfs` to `vanilladark-wmfs` in wmfsrc import.
-* Execute `.scripts/statusbar dark` instead of just `.scripts/statusbar`
-* `hsetroot -solid "#444444"` instead of `#DDDDDD`
+Run the script ```invert-theme``` and relaunch any active urxvt instances.
 
 ## Credits to
 * [TheImmortalPhoenix's WMFS setup](https://raw.githubusercontent.com/wiki/xorg62/wmfs/user-config/screenshots/theimmortalphoenix_20120406.png)
