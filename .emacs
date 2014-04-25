@@ -26,7 +26,7 @@
  '(hl-line ((t (:background "black"))))
  '(linum ((t (:foreground "gray"))))
  '(mode-line ((t (:background "black" :foreground "default" :box (:line-width 5 :color "black")))))
- '(mode-line-inactive ((t (:inherit mode-line :foreground "white":box (:line-width 5 :color "black")))))
+ '(mode-line-inactive ((t (:inherit mode-line :foreground "white" :box (:line-width 5 :color "black")))))
  '(vertical-border ((t (:background "default" :foreground "black"))))
  '(font-lock-comment-delimiter-face ((t (:foreground "gray"))))
  '(font-lock-comment-face ((t (:foreground "gray"))))
