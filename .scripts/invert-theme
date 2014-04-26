@@ -4,15 +4,16 @@ current=$([[ $(grep vanillalight ~/.Xdefaults) != "" ]] && echo light || echo da
 
 if [[ $current == "light" ]]; then
     substitution="s/vanillalight/vanilladark/"
-    bgcolor="#444444"
     statusarg="dark"
 else
     substitution="s/vanilladark/vanillalight/"
-    bgcolor="#DDDDDD"
 fi
 
 sed -i --follow-symlinks "$substitution" ~/.Xdefaults
 sed -i "$substitution" ~/.config/wmfs/wmfsrc
+
+colorfile=$(cat ~/.Xdefaults | grep "\.colors" | cut -d '"' -f2)
+bgcolor=$(sed -n "s/\*color0: *//p" "$colorfile")
 
 killall conky
 nohup statusbar "$statusarg" &
