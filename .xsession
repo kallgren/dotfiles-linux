@@ -15,5 +15,7 @@ bgcolor=$(sed -n "s/\*color0: *//p" "$colorfile")
 hsetroot -solid "$bgcolor" &
 compton -b &
 
+xbindkeys &
+
 sh ~/.scripts/statusbar "$statusarg" &
 exec wmfs

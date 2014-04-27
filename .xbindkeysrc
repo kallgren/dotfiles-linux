@@ -1,0 +1,62 @@
+# -*- shell-script -*-
+
+###########################
+###### Applications #######
+###########################
+
+"urxvt"
+  Control + Alt + Return
+
+
+"urxvt -e ssh celsius"
+  Mod4 + 1
+
+"chromium-browser"
+  Mod4 + 2
+
+"urxvt -e emacs -nw"
+  Mod4 + 3
+
+
+###########################
+######### Display #########
+###########################
+
+"brightness -i 10"
+  XF86MonBrightnessUp
+
+"brightness -d 10"
+  XF86MonBrightnessDown
+
+
+###########################
+########## Audio ##########
+###########################
+
+"amixer set Master 5+"
+  XF86AudioRaiseVolume
+
+"amixer set Master 5-"
+  XF86AudioLowerVolume
+
+"amixer set Master toggle"
+  XF86AudioMute
+
+
+###########################
+######### Desktop #########
+###########################
+
+"slock"
+  Control + Alt + l
+
+"invert-theme"
+  Control + Alt + i
+
+
+###########################
+########## Other ##########
+###########################
+
+"scrot"
+  Print
