@@ -17,7 +17,7 @@ bgcolor=$(sed -n "s/\*color0: *//p" "$colorfile")
 
 hsetroot -solid "$bgcolor" &
 
-killall conky
+killall statusbar
 nohup statusbar "$statusarg" > /dev/null 2>&1 &
 
 wmfs -c reload
