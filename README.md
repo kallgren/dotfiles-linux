@@ -32,7 +32,7 @@
 
 ## Switching theme
 
-Control + Alt + i if using my xbindkeysrc, otherwise run the script ```invert-theme``` and relaunch any active urxvt instances.
+<kbd>Control</kbd> + <kbd>Alt</kbd> + <kbd>i</kbd> if using my xbindkeysrc, otherwise run the script ```invert-theme``` and relaunch any active urxvt instances.
 
 ## Credits to
 * [TheImmortalPhoenix's WMFS setup](https://raw.githubusercontent.com/wiki/xorg62/wmfs/user-config/screenshots/theimmortalphoenix_20120406.png)
