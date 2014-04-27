@@ -15,9 +15,9 @@ sed -i "$substitution" ~/.config/wmfs/wmfsrc
 colorfile=$(cat ~/.Xdefaults | grep "\.colors" | cut -d '"' -f2)
 bgcolor=$(sed -n "s/\*color0: *//p" "$colorfile")
 
-killall conky
-nohup statusbar "$statusarg" &
+hsetroot -solid "$bgcolor" &
 
-hsetroot -solid "$bgcolor"
+killall conky
+nohup statusbar "$statusarg" > /dev/null 2>&1 &
 
 wmfs -c reload

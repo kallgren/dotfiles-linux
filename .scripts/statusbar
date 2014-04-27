@@ -1,9 +1,5 @@
-#!/bin/sh
+#!/bin/bash
 
-color="light"
+color=$([[ $1 == "dark" ]] && echo $1 || echo light)
 
-if [ "$1" = "dark" ]; then
-    color="dark"
-fi
-    
 conky -c ~/.conkyrc-"$color" | while true; read line; do wmfs -c status "top $line"; done

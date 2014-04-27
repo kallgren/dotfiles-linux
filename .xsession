@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # xset +fp /usr/share/fonts/local &
 # xset fp rehash &
@@ -7,8 +7,13 @@
 
 # ip set wlan0 up &
 
-hsetroot -solid "#DDDDDD" &
-compton -b
+[[ $(grep vanilladark ~/.Xdefaults) != "" ]] && statusarg="dark"
 
-sh ~/.scripts/statusbar &
+colorfile=$(cat ~/.Xdefaults | grep "\.colors" | cut -d '"' -f2)
+bgcolor=$(sed -n "s/\*color0: *//p" "$colorfile")
+
+hsetroot -solid "$bgcolor" &
+compton -b &
+
+sh ~/.scripts/statusbar "$statusarg" &
 exec wmfs
