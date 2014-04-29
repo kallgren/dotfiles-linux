@@ -18,6 +18,6 @@ bgcolor=$(sed -n "s/\*color0: *//p" "$colorfile")
 hsetroot -solid "$bgcolor" &
 
 killall statusbar
-nohup statusbar "$statusarg" > /dev/null 2>&1 &
+statusbar "$statusarg" &
 
 wmfs -c reload
