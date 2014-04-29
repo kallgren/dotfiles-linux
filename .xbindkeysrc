@@ -48,6 +48,9 @@
 ###########################
 
 "slock"
+  XF86PowerOff
+
+"slock"
   Control + Alt + l
 
 "invert-theme"
