@@ -22,10 +22,10 @@
 ######### Display #########
 ###########################
 
-"brightness -i 10"
+"~/.scripts/brightness -i 10"
   XF86MonBrightnessUp
 
-"brightness -d 10"
+"~/.scripts/brightness -d 10"
   XF86MonBrightnessDown
 
 
@@ -47,13 +47,13 @@
 ######### Desktop #########
 ###########################
 
-"slock"
+"sudo pm-suspend & slock"
   XF86PowerOff
 
 "slock"
   Control + Alt + l
 
-"invert-theme"
+"~/.scripts/invert-theme"
   Control + Alt + i
 
 
