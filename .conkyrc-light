@@ -24,9 +24,12 @@ TEXT
 ^s[right;\#707070;BAT ] ^s[right;${if_match ${battery_percent BAT1} < 20 }\#E84F4F${else}\#9BBBE2${endif};${battery_percent BAT1}%]\
 (1;status_surface;1240,20,75,22,\#9BBBE2 ^R[1;1;73;20;\#000000] ^s[left;\#707070; ${battery_time BAT1}])\
 ^s[right;\#B3B3B3; | ]\
+^s[right;\#707070;VOL ] ^s[right;${if_match "${exec amixer get Master | grep -o off}" == ""}\#9BBBE2${else}\#B3B3B3${endif};${if_match "${exec amixer get Master | grep -o off}" == ""}${exec amixer get Master | grep -oE "[[:digit:]]*%"}${else}MUTE${endif}]\
+(1;spawn;amixer set Master toggle)\
+^s[right;\#B3B3B3; | ]\
 ^s[right;\#707070;DISP ] ^s[right;\#9BBBE2;${exec cat /sys/class/backlight/acpi_video0/brightness}%]\
 (1;spawn;~/.scripts/brightness -i 10)\
-(3;spawn;~/.scripts/brightness -i -10)\
+(3;spawn;~/.scripts/brightness -d 10)\
 ^s[right;\#B3B3B3; | ]\
 ^s[right;\#707070;${time %H:%M:%S} ]\
 (1;status_surface;1366,20,500,300,\#9BBBE2 ^R[1;0;499;299;\#000000]\

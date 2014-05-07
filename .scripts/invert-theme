@@ -17,7 +17,7 @@ bgcolor=$(sed -n "s/\*color0: *//p" "$colorfile")
 
 hsetroot -solid "$bgcolor" &
 
-killall statusbar
+killall conky
 ~/.scripts/statusbar "$statusarg" &
 
 wmfs -c reload
