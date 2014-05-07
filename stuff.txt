@@ -1,26 +1,11 @@
+Useful stuff to remember
+========================
+
 Fonts
 =====
 Change sans and sans-serif to Verdana in /etc/fonts/fonts.conf
 ttf-ms-fonts
 terminus-font
-
-Programs
-========
-wmfs
-slim
-slock
-feh
-rxvt-unicode
-tmux
-emacs
-conky
-scrot
-chromium
-keepassx
-archey
-epdfview
-lm-sensors?
-pm-utils
 
 Sudoers
 =======
@@ -29,7 +14,23 @@ kallgren ALL=NOPASSWD:/usr/sbin/pm-suspend
 
 Audio
 =====
-(alsamixer)
-(sudo usermod -a -G audio kallgren / sudo adduser kallgren audio)
+alsamixer
+sudo usermod -a -G audio kallgren / sudo adduser kallgren audio
 pacmd list-sinks
 pacmd set-default-sink 0
+
+SSH
+===
+~/.ssh/config:
+Host example
+     HostName example.host.com
+     User
+
+ssh-keygen
+
+Git
+===
+~/.gitconfig:
+[user]
+	name = kallgren
+	email = insert@email.here

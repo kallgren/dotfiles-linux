@@ -17,6 +17,12 @@
 "urxvt -e emacs -nw"
   Mod4 + 3
 
+"urxvt -e ssh bitninja"
+  Mod4 + 4
+
+"epdfview"
+  Mod4 + 5
+
 
 ###########################
 ######### Display #########
