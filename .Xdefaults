@@ -9,6 +9,7 @@ URxvt.boldFont:		xft:Terminus:pixelsize=8:antialias=false
 URxvt*scrollBar:	false
 URxvt*saveLines:	3000
 URxvt*depth:		32
+URxvt*internalBorder:	2
 
 !! Clickable URLs
 URxvt.perl-ext-common:	default,matcher
