@@ -36,13 +36,6 @@
      theme = "default"
   [/bar]
 
-# [bar]
-#    position = 0
-#    screen = 1
-#    elements = "ts"
-#    theme = "default"
-# [/bar]
-
 [/bars]
 
 [tags]
@@ -79,7 +72,7 @@
 [client]
 
   # Padding between clients (default: 0) :
-  # padding = 20
+  padding = 100
 
   # Give focus to new created client (default = false)
   autofocus = true
@@ -121,13 +114,13 @@
   [/rule]
 
   [rule]
-      instance = "chromium"
-      screen   = 0
-      free     = false
+      instance = "chromium-browser"
+      free     = true
   [/rule]
 
   [rule]
       instance = "epdfview"
+      free = true
       tab = true
   [/rule]
 
@@ -145,21 +138,12 @@
      width = 400
   [/launcher]
 
-  # brightness launcher
-  [launcher]
-     name    = "brightness"
-     prompt  = "brightness:"
-     command = "spawn ~/.scripts/brightness"
-     width   = 85
-  [/launcher]
-
 [/launchers]
 
 [keys]
 
   # Launcher
   [key] mod = {"Super"} key = "p" func = "launcher" cmd = "exec" [/key]
-  #  [key] mod = {"Super"} key = "b" func = "launcher" cmd = "brightness" [/key]
 
   [key] mod = {"Control", "Alt"} key = "q" func = "quit" [/key]
   [key] mod = {"Control", "Alt"} key = "r" func = "reload" [/key]
