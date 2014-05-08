@@ -19,6 +19,13 @@ sudo usermod -a -G audio kallgren / sudo adduser kallgren audio
 pacmd list-sinks
 pacmd set-default-sink 0
 
+WMFS
+====
+~/wmfs/src/client.c:
+client_winsize():
+  if(c->flags & CLIENT_FREE)
+       client_geo_hints(&c->wgeo, (int*)c->sizeh);
+
 SSH
 ===
 ~/.ssh/config:
