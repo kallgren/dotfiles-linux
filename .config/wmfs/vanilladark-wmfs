@@ -32,11 +32,11 @@
 
    # Frame / Client
    client_normal_fg = "#AAAAAA"
-   client_normal_bg = "#666666"
+   client_normal_bg = "#555555"
    # client_normal_statusline = "\s[3;9;#121212;x] \s[2;8;#ff0000;x](1;client_close)"
 
    client_sel_fg = "#222222"
-   client_sel_bg = "#9BBBE2"
+   client_sel_bg = "#666666"
    # client_sel_statusline = "\s[3;9;#121212;x] \s[2;8;#ff0000;x](1;client_close)"
 
    # client_free_statusline = ""
