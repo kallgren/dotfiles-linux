@@ -1,0 +1,11 @@
+#!/bin/bash
+
+wmfsrcpath=~/.config/wmfs/wmfsrc
+
+if [[ $(grep "position = 0" $wmfsrcpath) != "" ]]; then
+    sed -i "s/position = 0/position = 2/" $wmfsrcpath
+else
+    sed -i "s/position = 2/position = 0/" $wmfsrcpath
+fi
+
+wmfs -c reload
