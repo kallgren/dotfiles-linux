@@ -11,7 +11,15 @@ backupdir="$targetdir"_backup
 # Counter variables
 filesmoved=0
 fileslinked=0
+alreadyexisted=0
 errors=0
+
+GREEN='\033[32m'
+RED='\033[31m'
+DEFAULT='\033[0m'
+
+OK="${GREEN}[OK]${DEFAULT}"
+FAIL="${RED}[FAIL]${DEFAULT}"
 
 # Allowed files
 files="$(cat $targetdir/files)"
@@ -73,15 +81,23 @@ backup() {
 link() {
     for file in $*; do
 	if [ -e "$targetdir"/"$file" ]; then
-	    if [ -L "$linkdir"/"$file" -a $(readlink "$linkdir"/"$file" = "$targetdir"/"$file") ]; then
-		print_message "$linkdir"/"$file": symlink already exists, nothing to be done
+	    if [[ -L "$linkdir"/"$file" && $(readlink "$linkdir"/"$file") == "$targetdir"/"$file" ]]; then
+		let alreadyexisted++
+		echo -e "\033[1;36m$linkdir/$file\033[0m -> $targetdir/$file \033[1;34m[EXISTS]${DEFAULT}"
 		continue
 	    fi
 
 	    mkdir -p "$linkdir"/"$(dirname $file)"
+	    echo -ne "\033[1;36m$linkdir/$file\033[0m -> $targetdir/$file "
 	    ln -s "$targetdir"/"$file" "$linkdir"/"$file"
-	    let fileslinked++
-	    echo -e "\033[1;36m$linkdir/$file\033[0m -> $targetdir/$file"
+
+	    if [ -L "$linkdir"/"$file" -a  $(readlink "$linkdir"/"$file") = "$targetdir"/"$file" ]; then
+		let fileslinked++
+		echo -e "$OK"
+	    else
+		echo -e "$FAIL"
+		let errors++
+	    fi
 	else
 	    let print_message
 	    errors++ "error: cannot access $targetdir/$file: No such file or directory"
@@ -96,7 +112,9 @@ main() {
 	exit 1
     fi
 
-    read -n 1 -p "You are about to create $# symlinks in $linkdir to files in $targetdir. Do you want to continue? (y/n): "
+    echo "You are about to create $# symlinks in $linkdir to files in $targetdir."
+    read -n 1 -p "Do you want to continue? (y/n): "
+    echo
     echo
 
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -106,20 +124,14 @@ main() {
 
     make_backup_dir
     
-    echo
-    echo -n "Backing up existing files ..."
     backup "$*"
-    echo "done"
-    
-    echo "Creating symbolic links ... "
-    echo
+
     link "$*"
-    echo
-    echo "...all done"
     
     echo
     echo "$filesmoved file(s) backed up to $backupdir/"
     echo "$fileslinked symbolic link(s) created"
+    echo "$alreadyexisted symbolic link(s) already existed"
     echo "$errors error(s)"
 }
 
@@ -140,8 +152,7 @@ if [ $# -gt 0 ]; then
     selectedfiles="$files"
 fi
 
-read -n 1 -p "Press [f] for full install, [p] for partial: "
-echo
+read -n 1 -p "[f]ull or [p]artial install? "
 echo
 
 case $REPLY in
