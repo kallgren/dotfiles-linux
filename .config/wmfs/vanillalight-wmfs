@@ -11,19 +11,19 @@
    bars_bg = "#F3F3F3"
 
    # Element tags
-   tags_normal_fg = "#B3B3B3"
+   tags_normal_fg = "#707070"
    tags_normal_bg = "#F3F3F3"
    # tags_normal_statusline = ""
 
-   tags_sel_fg    = "#707070"
+   tags_sel_fg    = "#F3F3F3"
    tags_sel_bg    = "#9BBBE2"
    # tags_sel_statusline = ""
 
-   tags_occupied_fg = "#B3B3B3"
+   tags_occupied_fg = "#707070"
    tags_occupied_bg = "#F3F3F3"
    # tags_occupied_statusline = "\R[0;0;100;1;#999999]"
 
-   tags_urgent_fg    = "#B3B3B3"
+   tags_urgent_fg    = "#707070"
    tags_urgent_bg    = "#FEA63C"
    # tags_urgent_statusline = ""
 
