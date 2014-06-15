@@ -1,0 +1,109 @@
+#!/usr/bin/env python
+
+import curses
+import curses.textpad
+
+class Client:
+    def __init__(self, stdscr):
+        self.stdscr = stdscr
+        
+        curses.use_default_colors()
+        for i in range(0, curses.COLORS):
+            curses.init_pair(i+1, i, -1)
+        curses.init_pair(17, -1, curses.COLOR_BLACK)
+        
+        self.LINES, self.COLS = self.stdscr.getmaxyx()
+        self.SIDEBARWIDTH = 15
+        self.HISTORY = 1000
+        self.position = 0
+        
+        self.content = curses.newpad(self.HISTORY, self.COLS - self.SIDEBARWIDTH - 1)
+        self.content.scrollok(True) # For when history is full
+        
+        self.sidebar = self.stdscr.subpad(0, self.COLS - self.SIDEBARWIDTH)
+        self.sidebar.addstr('kallgren\n')
+        self.sidebar.addstr('kgnbot\n')
+        self.sidebar.addstr('random\n')
+        # sidebar.vline(curses.ACS_VLINE, self.LINES - 2)
+        self.sidebar.refresh()
+
+        self.divider = curses.newwin(self.LINES - 2, 1, 0, self.COLS - self.SIDEBARWIDTH - 1)
+        self.divider.bkgd('|', curses.color_pair(1))
+        self.divider.refresh()
+        
+        self.statusbar = curses.newwin(1, self.COLS, self.LINES - 2, 0)
+        self.statusbar.bkgd(' ', curses.color_pair(17))
+        self.statusbar.addstr(" CHAT CLIENT - connected.", curses.color_pair(17))
+        self.statusbar.refresh()
+        
+        self.bufwin = curses.newwin(1, self.COLS, self.LINES - 1, 0)
+        self.bufwin.refresh()
+        
+        self.textbox = curses.textpad.Textbox(self.bufwin)
+        self.textbox.stripspaces = True
+
+    def start(self):
+        while True:
+            text = self.textbox.edit(self.handle)
+            self.bufwin.erase()
+            text = text.strip() # To get rid of a trailing whitespace
+            if text == "/quit":
+                return
+            elif text == "/clear":
+                self.content.erase()
+                self.position = 0
+            else:
+                try:
+                    self.content.addstr('kallgren: ' + text + '\n')
+                    y, x = self.content.getyx()
+                    if y - self.position > self.LINES - 2: # If the whole buffer is filled
+                        self.position = y - (self.LINES - 2)
+                except curses.error:
+                    pass            
+            self.content.refresh(self.position, 0, 0, 0, self.LINES - 3, self.COLS - self.SIDEBARWIDTH - 1)
+
+    def handle(self, ch):
+        if ch == curses.KEY_RESIZE:
+            self.resize()
+        elif ch == curses.KEY_UP:
+            if self.position > 0:
+                self.position -= 1
+                self.content.refresh(self.position, 0, 0, 0, self.LINES - 3, self.COLS - self.SIDEBARWIDTH - 1)
+        elif ch == curses.KEY_DOWN:
+            y, x = self.content.getyx()
+            if y > self.position + self.LINES - 2:
+                self.position += 1
+                self.content.refresh(self.position, 0, 0, 0, self.LINES - 3, self.COLS - self.SIDEBARWIDTH - 1)
+        elif ch == curses.KEY_HOME:
+            if self.position != 0:
+                self.position = 0
+                self.content.refresh(self.position, 0, 0, 0, self.LINES - 3, self.COLS - self.SIDEBARWIDTH - 1)
+        elif ch == curses.KEY_END:
+            y, x = self.content.getyx()
+            if y >= self.LINES - 2:
+                self.position = y - (self.LINES - 2)
+                self.content.refresh(self.position, 0, 0, 0, self.LINES - 3, self.COLS - self.SIDEBARWIDTH - 1)
+        else:
+            return ch
+
+    def resize(self):
+        self.LINES, self.COLS = self.stdscr.getmaxyx()
+        self.content.resize(self.LINES - 2, self.COLS - self.SIDEBARWIDTH - 1)
+        self.content.refresh(self.position, 0, 0, 0, self.LINES - 2, self.COLS - self.SIDEBARWIDTH - 1)
+        self.sidebar.mvwin(0, self.COLS - self.SIDEBARWIDTH)
+        # self.sidebar.resize(self.LINES - 2, self.SIDEBARWIDTH)
+        self.sidebar.refresh()
+        self.divider.mvwin(0, self.COLS - self.SIDEBARWIDTH - 1)
+        self.divider.resize(self.LINES - 2, 1)
+        self.divider.refresh()
+        self.statusbar.mvwin(self.LINES - 2, 0)
+        self.statusbar.resize(1, self.COLS)
+        self.statusbar.refresh()
+        self.bufwin.mvwin(self.LINES - 1, 0)
+        self.bufwin.resize(1, self.COLS)
+
+def main(stdscr):
+    Client(stdscr).start()
+
+if __name__ == '__main__':
+    curses.wrapper(main)
