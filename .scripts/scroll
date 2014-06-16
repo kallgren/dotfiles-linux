@@ -1,0 +1,94 @@
+#!/usr/bin/env python
+
+import curses
+import curses.textpad
+
+class ScrollWindow:
+    def __init__(self, parent, HISTORY=None):
+        self.parent = parent
+        self.y, self.x = parent.getbegyx()
+        self.LINES, self.COLS = parent.getmaxyx()
+        if HISTORY < self.LINES or HISTORY is None:
+            self.HISTORY = self.LINES
+        else:
+            self.HISTORY = HISTORY
+
+        self.position = 0
+
+        self.pad = curses.newpad(self.HISTORY, self.COLS)
+        self.pad.scrollok(True)
+        
+    def refresh(self):
+        self.pad.refresh(self.position, 0, self.y, self.x, self.LINES - 1, self.COLS)
+
+    def scroll(self, lines=1):
+        if lines < 0:
+            if self.position + lines < 0: # If the given lines would scroll too far
+                self.position = 0
+            else:
+                self.position += lines
+        elif lines > 0:
+            y, x = self.pad.getyx()
+#            if y - (self.position + lines) > self.LINES: # If the given lines would scroll too far
+#                self.position = y - self.LINES
+            if y > self.position + self.LINES: # Only allow scrolling down if there is more text to display
+                self.position += lines
+            
+    def addstr(self, string):
+        self.pad.addstr(string)
+
+    def getch(self):
+        return self.parent.getch()
+
+    def home(self):
+        if self.position != 0:
+            self.position = 0
+
+    def end(self):
+        y, x = self.pad.getyx()
+        if y >= self.LINES:
+            self.position = y - self.LINES
+
+def main(stdscr):
+    curses.use_default_colors()
+    history = 100
+    
+    y, x = stdscr.getmaxyx()
+
+    content = stdscr.subwin(y - 1, x, 0, 0)
+    pad = ScrollWindow(content, history)
+    
+    global pad
+
+    bufwin = stdscr.subwin(1, x, y - 1, 0)    
+    textbox = curses.textpad.Textbox(bufwin)
+    textbox.stripspaces = True
+
+    for i in range (0, 10):
+        pad.addstr(str(i) + '\n')
+    stdscr.refresh()
+    pad.refresh()
+    while True:
+        input = textbox.edit(handle)
+        bufwin.erase()
+        pad.addstr('> ' + input + '\n')
+        pad.end()
+        pad.refresh()
+
+def handle(ch):
+    if ch == curses.KEY_UP:
+        pad.scroll(-1)
+        pad.refresh()
+    elif ch == curses.KEY_DOWN:
+        pad.scroll(1)
+        pad.refresh()
+    elif ch == curses.KEY_HOME:
+        pad.home()
+        pad.refresh()
+    elif ch == curses.KEY_END:
+        pad.end()
+        pad.refresh()
+    else:
+        return ch
+    
+curses.wrapper(main)
