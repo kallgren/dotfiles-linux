@@ -21,6 +21,9 @@ class ScrollWindow:
     def refresh(self):
         self.pad.refresh(self.position, 0, self.y, self.x, self.LINES - 1, self.COLS)
 
+    def addstr(self, string):
+        self.pad.addstr(string)
+
     def scroll(self, lines=1):
         if lines < 0:
             if self.position + lines < 0: # If the given lines would scroll too far
@@ -34,12 +37,6 @@ class ScrollWindow:
             if y > self.position + self.LINES: # Only allow scrolling down if there is more text to display
                 self.position += lines
             
-    def addstr(self, string):
-        self.pad.addstr(string)
-
-    def getch(self):
-        return self.parent.getch()
-
     def home(self):
         if self.position != 0:
             self.position = 0
@@ -51,7 +48,7 @@ class ScrollWindow:
 
 def main(stdscr):
     curses.use_default_colors()
-    history = 100
+    history = 1
     
     y, x = stdscr.getmaxyx()
 
@@ -66,7 +63,8 @@ def main(stdscr):
 
     for i in range (0, 10):
         pad.addstr(str(i) + '\n')
-    stdscr.refresh()
+
+#    stdscr.refresh() VARFOR?
     pad.refresh()
     while True:
         input = textbox.edit(handle)

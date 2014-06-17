@@ -3,6 +3,17 @@
 import curses
 import curses.textpad
 
+users = [
+    'kallgren2',
+    'Kallgren3',
+    'kallgren4',
+    'bot',
+    'random'
+]
+
+def completenick(beginning):
+    return [user for user in users if user.startswith(beginning)]
+
 class Client:
     def __init__(self, stdscr):
         self.stdscr = stdscr
@@ -16,14 +27,22 @@ class Client:
         self.SIDEBARWIDTH = 15
         self.HISTORY = 1000
         self.position = 0
+
+        self.nick = 'kallgren'
+        users.append(self.nick)
+
+        self.compi = 0 # Completion index
+        self.comptext = '' # Last completion attempt
         
         self.content = curses.newpad(self.HISTORY, self.COLS - self.SIDEBARWIDTH - 1)
         self.content.scrollok(True) # For when history is full
         
         self.sidebar = self.stdscr.subpad(0, self.COLS - self.SIDEBARWIDTH)
-        self.sidebar.addstr('kallgren\n')
-        self.sidebar.addstr('kgnbot\n')
-        self.sidebar.addstr('random\n')
+
+        users.sort(key = str.lower)
+        for user in users:
+            self.sidebar.addstr(user + '\n')
+
         # sidebar.vline(curses.ACS_VLINE, self.LINES - 2)
         self.sidebar.refresh()
 
@@ -33,7 +52,7 @@ class Client:
         
         self.statusbar = curses.newwin(1, self.COLS, self.LINES - 2, 0)
         self.statusbar.bkgd(' ', curses.color_pair(17))
-        self.statusbar.addstr(" CHAT CLIENT - connected.", curses.color_pair(17))
+        self.statusbar.addstr(' Chatting as ' + self.nick + ' [connected]')
         self.statusbar.refresh()
         
         self.bufwin = curses.newwin(1, self.COLS, self.LINES - 1, 0)
@@ -52,9 +71,13 @@ class Client:
             elif text == "/clear":
                 self.content.erase()
                 self.position = 0
+            elif text.startswith('/nick '): # No more checks needed because we stripped spaces
+                self.nick = text.split()[1]
             else:
                 try:
-                    self.content.addstr('kallgren: ' + text + '\n')
+                    self.content.addstr(self.nick, curses.color_pair(5))
+                    self.content.addstr(' | ', curses.color_pair(8))
+                    self.content.addstr(text + '\n')
                     y, x = self.content.getyx()
                     if y - self.position > self.LINES - 2: # If the whole buffer is filled
                         self.position = y - (self.LINES - 2)
@@ -83,7 +106,20 @@ class Client:
             if y >= self.LINES - 2:
                 self.position = y - (self.LINES - 2)
                 self.content.refresh(self.position, 0, 0, 0, self.LINES - 3, self.COLS - self.SIDEBARWIDTH - 1)
+        elif ch == curses.ascii.TAB:
+            if self.compi == 0: # If there is a new string to complete
+                self.comptext = self.textbox.gather().strip()
+            
+            completions = completenick(self.comptext)
+            if len(completions) > 0:
+                self.bufwin.erase()
+                if len(completions) <= self.compi:
+                    self.compi = 0 # Back to the beginning
+                self.bufwin.addstr(completions[self.compi] + ': ')
+            self.compi += 1
+            return ''
         else:
+            self.compi = 0 # Reset completion index to signal that something was changed
             return ch
 
     def resize(self):
