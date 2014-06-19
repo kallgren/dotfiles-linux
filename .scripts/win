@@ -138,6 +138,50 @@ class Client:
         self.bufwin.mvwin(self.LINES - 1, 0)
         self.bufwin.resize(1, self.COLS)
 
+class ScrollWindow:
+    def __init__(self, parent, HISTORY=None):
+        self.parent = parent
+        self.BEGY, self.BEGX = parent.getbegyx()
+        self.MAXY, self.MAXX = parent.getmaxyx()
+
+        if HISTORY < self.MAXY or HISTORY is None:
+            self.HISTORY = self.MAXY
+        else:
+            self.HISTORY = HISTORY
+
+        self.pad = curses.newpad(self.HISTORY, self.MAXX)
+        self.pad.scrollok(True)
+        self.position = 0
+        
+    def refresh(self):
+        self.pad.refresh(self.position, 0, self.BEGY, self.BEGX, self.MAXY - 1,
+                         self.MAXX)
+
+    def addstr(self, string):
+        self.pad.addstr(string)
+
+    def erase(self):
+        self.pad.erase()
+        self.position = 0
+
+    def scroll(self, lines=1):
+        y, x = self.pad.getyx()
+        if self.position + lines < 0:
+            self.position = 0
+        elif self.position + lines + self.MAXY > y:
+            self.position = y - self.MAXY
+        else:
+            self.position += lines
+
+    def home(self):
+        if self.position != 0:
+            self.position = 0
+
+    def end(self):
+        y, x = self.pad.getyx()
+        if y > self.MAXY:
+            self.position = y - self.MAXY
+
 def main(stdscr):
     Client(stdscr).start()
 
