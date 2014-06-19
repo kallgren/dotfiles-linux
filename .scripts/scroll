@@ -6,49 +6,50 @@ import curses.textpad
 class ScrollWindow:
     def __init__(self, parent, HISTORY=None):
         self.parent = parent
-        self.y, self.x = parent.getbegyx()
-        self.LINES, self.COLS = parent.getmaxyx()
-        if HISTORY < self.LINES or HISTORY is None:
-            self.HISTORY = self.LINES
+        self.BEGY, self.BEGX = parent.getbegyx()
+        self.MAXY, self.MAXX = parent.getmaxyx()
+
+        if HISTORY < self.MAXY or HISTORY is None:
+            self.HISTORY = self.MAXY
         else:
             self.HISTORY = HISTORY
 
-        self.position = 0
-
-        self.pad = curses.newpad(self.HISTORY, self.COLS)
+        self.pad = curses.newpad(self.HISTORY, self.MAXX)
         self.pad.scrollok(True)
+        self.position = 0
         
     def refresh(self):
-        self.pad.refresh(self.position, 0, self.y, self.x, self.LINES - 1, self.COLS)
+        self.pad.refresh(self.position, 0, self.BEGY, self.BEGX, self.MAXY - 1,
+                         self.MAXX)
 
     def addstr(self, string):
         self.pad.addstr(string)
 
+    def erase(self):
+        self.pad.erase()
+        self.position = 0
+
     def scroll(self, lines=1):
-        if lines < 0:
-            if self.position + lines < 0: # If the given lines would scroll too far
-                self.position = 0
-            else:
-                self.position += lines
-        elif lines > 0:
-            y, x = self.pad.getyx()
-#            if y - (self.position + lines) > self.LINES: # If the given lines would scroll too far
-#                self.position = y - self.LINES
-            if y > self.position + self.LINES: # Only allow scrolling down if there is more text to display
-                self.position += lines
-            
+        y, x = self.pad.getyx()
+        if self.position + lines < 0:
+            self.position = 0
+        elif self.position + lines + self.MAXY > y:
+            self.position = y - self.MAXY
+        else:
+            self.position += lines
+
     def home(self):
         if self.position != 0:
             self.position = 0
 
     def end(self):
         y, x = self.pad.getyx()
-        if y >= self.LINES:
-            self.position = y - self.LINES
+        if y > self.MAXY:
+            self.position = y - self.MAXY
 
 def main(stdscr):
     curses.use_default_colors()
-    history = 1
+    history = 1000
     
     y, x = stdscr.getmaxyx()
 
@@ -64,7 +65,7 @@ def main(stdscr):
     for i in range (0, 10):
         pad.addstr(str(i) + '\n')
 
-#    stdscr.refresh() VARFOR?
+#    stdscr.refresh() WHY?
     pad.refresh()
     while True:
         input = textbox.edit(handle)
@@ -79,6 +80,12 @@ def handle(ch):
         pad.refresh()
     elif ch == curses.KEY_DOWN:
         pad.scroll(1)
+        pad.refresh()
+    elif ch == curses.KEY_PPAGE:
+        pad.scroll(-10)
+        pad.refresh()
+    elif ch == curses.KEY_NPAGE:
+        pad.scroll(10)
         pad.refresh()
     elif ch == curses.KEY_HOME:
         pad.home()
