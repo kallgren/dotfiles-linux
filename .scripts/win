@@ -8,7 +8,27 @@ users = [
     'Kallgren3',
     'kallgren4',
     'bot',
-    'random'
+    'random',
+    'random',
+    'random',
+    'random',
+    'random',
+    'random',
+    'random',
+    'random',
+    'random',
+    'random',
+    'random',
+    'random',
+    'random',
+    'random',
+    'random',
+    'random',
+    'random',
+    'random',
+    'random',
+    '123456789123456',
+    'test'
 ]
 
 def completenick(beginning):
@@ -17,95 +37,119 @@ def completenick(beginning):
 class Client:
     def __init__(self, stdscr):
         self.stdscr = stdscr
-        
+        self.__init_colors__()
+        self.__init_variables__()
+        self.__init_windows__()
+
+    def __init_colors__(self):
         curses.use_default_colors()
         for i in range(0, curses.COLORS):
-            curses.init_pair(i+1, i, -1)
+            curses.init_pair(i + 1, i, -1)
         curses.init_pair(17, -1, curses.COLOR_BLACK)
-        
-        self.LINES, self.COLS = self.stdscr.getmaxyx()
+
+    def __init_variables__(self):
+        self.MAXY, self.MAXX = self.stdscr.getmaxyx()
         self.SIDEBARWIDTH = 15
         self.HISTORY = 1000
-        self.position = 0
+        self.MAXUSERS = 500
 
         self.nick = 'kallgren'
         users.append(self.nick)
+        users.sort(key = str.lower)
 
         self.compi = 0 # Completion index
-        self.comptext = '' # Last completion attempt
-        
-        self.content = curses.newpad(self.HISTORY, self.COLS - self.SIDEBARWIDTH - 1)
-        self.content.scrollok(True) # For when history is full
-        
-        self.sidebar = self.stdscr.subpad(0, self.COLS - self.SIDEBARWIDTH)
+        self.comptext = '' # Previous completion attempt
 
-        users.sort(key = str.lower)
+    def __init_windows__(self):
+        # Content area
+        height = self.MAXY - 2
+        width = self.MAXX - self.SIDEBARWIDTH - 1
+        self.container = self.stdscr.subwin(height, width, 0, 0)
+        self.content = ScrollWindow(self.container, self.HISTORY)
+
+        # Sidebar divider
+        width = 1
+        begin_x = self.MAXX - self.SIDEBARWIDTH - 1
+        self.divider = self.stdscr.subwin(height, width, 0, begin_x)
+        self.divider.bkgd('|', curses.color_pair(1))
+
+        # Sidebar
+        width = self.SIDEBARWIDTH - 1
+        begin_x = self.MAXX - self.SIDEBARWIDTH
+        self.sidecontainer = self.stdscr.subwin(height, width, 0, begin_x)
+        self.sidebar = ScrollWindow(self.sidecontainer, self.MAXUSERS)
         for user in users:
             self.sidebar.addstr(user + '\n')
 
-        # sidebar.vline(curses.ACS_VLINE, self.LINES - 2)
-        self.sidebar.refresh()
-
-        self.divider = curses.newwin(self.LINES - 2, 1, 0, self.COLS - self.SIDEBARWIDTH - 1)
-        self.divider.bkgd('|', curses.color_pair(1))
-        self.divider.refresh()
-        
-        self.statusbar = curses.newwin(1, self.COLS, self.LINES - 2, 0)
+        # Statusbar
+        height = 1
+        width = self.MAXX
+        begin_y = self.MAXY - 2
+        self.statusbar = self.stdscr.subwin(height, width, begin_y, 0)
         self.statusbar.bkgd(' ', curses.color_pair(17))
         self.statusbar.addstr(' Chatting as ' + self.nick + ' [connected]')
-        self.statusbar.refresh()
         
-        self.bufwin = curses.newwin(1, self.COLS, self.LINES - 1, 0)
-        self.bufwin.refresh()
-        
+        # Input area
+        begin_y = self.MAXY - 1
+        self.bufwin = self.stdscr.subwin(height, width, begin_y, 0)
         self.textbox = curses.textpad.Textbox(self.bufwin)
-        self.textbox.stripspaces = True
+        self.textbox.stripspaces = True        
+
+        self.content.refresh()
+        self.divider.refresh()
+        self.sidebar.refresh()
+        self.statusbar.refresh()
+        self.bufwin.refresh()
 
     def start(self):
         while True:
-            text = self.textbox.edit(self.handle)
+            text = self.textbox.edit(self.validator)
             self.bufwin.erase()
             text = text.strip() # To get rid of a trailing whitespace
+
             if text == "/quit":
                 return
             elif text == "/clear":
                 self.content.erase()
-                self.position = 0
-            elif text.startswith('/nick '): # No more checks needed because we stripped spaces
+            elif text.startswith('/nick '): # No more checks because of strip
                 self.nick = text.split()[1]
             else:
                 try:
                     self.content.addstr(self.nick, curses.color_pair(5))
                     self.content.addstr(' | ', curses.color_pair(8))
                     self.content.addstr(text + '\n')
-                    y, x = self.content.getyx()
-                    if y - self.position > self.LINES - 2: # If the whole buffer is filled
-                        self.position = y - (self.LINES - 2)
+                    self.content.end()
                 except curses.error:
                     pass            
-            self.content.refresh(self.position, 0, 0, 0, self.LINES - 3, self.COLS - self.SIDEBARWIDTH - 1)
+            self.content.refresh()
 
-    def handle(self, ch):
+    def validator(self, ch):
         if ch == curses.KEY_RESIZE:
             self.resize()
         elif ch == curses.KEY_UP:
-            if self.position > 0:
-                self.position -= 1
-                self.content.refresh(self.position, 0, 0, 0, self.LINES - 3, self.COLS - self.SIDEBARWIDTH - 1)
+            self.content.scroll(-1)
+            self.content.refresh()
+            self.bufwin.refresh()
         elif ch == curses.KEY_DOWN:
-            y, x = self.content.getyx()
-            if y > self.position + self.LINES - 2:
-                self.position += 1
-                self.content.refresh(self.position, 0, 0, 0, self.LINES - 3, self.COLS - self.SIDEBARWIDTH - 1)
+            self.content.scroll(1)
+            self.content.refresh()
+            self.bufwin.refresh()
+        elif ch == curses.KEY_PPAGE:
+            self.sidebar.scroll(-1)
+            self.sidebar.refresh()
+            self.bufwin.refresh()
+        elif ch == curses.KEY_NPAGE:
+            self.sidebar.scroll(1)
+            self.sidebar.refresh()
+            self.bufwin.refresh()
         elif ch == curses.KEY_HOME:
-            if self.position != 0:
-                self.position = 0
-                self.content.refresh(self.position, 0, 0, 0, self.LINES - 3, self.COLS - self.SIDEBARWIDTH - 1)
+            self.content.home()
+            self.content.refresh()
+            self.bufwin.refresh()
         elif ch == curses.KEY_END:
-            y, x = self.content.getyx()
-            if y >= self.LINES - 2:
-                self.position = y - (self.LINES - 2)
-                self.content.refresh(self.position, 0, 0, 0, self.LINES - 3, self.COLS - self.SIDEBARWIDTH - 1)
+            self.content.end()
+            self.content.refresh()
+            self.bufwin.refresh()
         elif ch == curses.ascii.TAB:
             if self.compi == 0: # If there is a new string to complete
                 self.comptext = self.textbox.gather().strip()
@@ -119,30 +163,38 @@ class Client:
             self.compi += 1
             return ''
         else:
-            self.compi = 0 # Reset completion index to signal that something was changed
+            self.compi = 0 # Reset index to signal that something was changed
             return ch
 
     def resize(self):
-        self.LINES, self.COLS = self.stdscr.getmaxyx()
-        self.content.resize(self.LINES - 2, self.COLS - self.SIDEBARWIDTH - 1)
-        self.content.refresh(self.position, 0, 0, 0, self.LINES - 2, self.COLS - self.SIDEBARWIDTH - 1)
-        self.sidebar.mvwin(0, self.COLS - self.SIDEBARWIDTH)
-        # self.sidebar.resize(self.LINES - 2, self.SIDEBARWIDTH)
-        self.sidebar.refresh()
-        self.divider.mvwin(0, self.COLS - self.SIDEBARWIDTH - 1)
-        self.divider.resize(self.LINES - 2, 1)
+        self.MAXY, self.MAXX = self.stdscr.getmaxyx()
+
+        self.content.resize(self.MAXY - 2, self.MAXX - self.SIDEBARWIDTH - 1)
+
+        self.sidebar.mvwin(0, self.MAXX - self.SIDEBARWIDTH)
+        self.sidebar.resize(self.MAXY - 2, self.SIDEBARWIDTH)
+
+        self.divider.mvwin(0, self.MAXX - self.SIDEBARWIDTH - 1)
+        self.divider.resize(self.MAXY - 2, 1)
+
+        self.statusbar.mvwin(self.MAXY - 2, 0)
+        self.statusbar.resize(1, self.MAXX)
+
+        self.bufwin.mvwin(self.MAXY - 1, 0)
+        self.bufwin.resize(1, self.MAXX)
+
+        self.content.refresh()
         self.divider.refresh()
-        self.statusbar.mvwin(self.LINES - 2, 0)
-        self.statusbar.resize(1, self.COLS)
+        self.sidebar.refresh()
         self.statusbar.refresh()
-        self.bufwin.mvwin(self.LINES - 1, 0)
-        self.bufwin.resize(1, self.COLS)
 
 class ScrollWindow:
     def __init__(self, parent, HISTORY=None):
         self.parent = parent
         self.BEGY, self.BEGX = parent.getbegyx()
         self.MAXY, self.MAXX = parent.getmaxyx()
+        self.MAXY += self.BEGY
+        self.MAXX += self.BEGX
 
         if HISTORY < self.MAXY or HISTORY is None:
             self.HISTORY = self.MAXY
@@ -154,15 +206,18 @@ class ScrollWindow:
         self.position = 0
         
     def refresh(self):
-        self.pad.refresh(self.position, 0, self.BEGY, self.BEGX, self.MAXY - 1,
-                         self.MAXX)
+        self.pad.refresh(self.position, 0, self.BEGY, self.BEGX,
+                         self.MAXY - 1, self.MAXX)
 
-    def addstr(self, string):
-        self.pad.addstr(string)
+    def addstr(self, string, attr=0):
+        self.pad.addstr(string, attr)
 
     def erase(self):
         self.pad.erase()
         self.position = 0
+
+    def bkgd(self, ch, attr=0):
+        self.pad.bkgd(ch, attr)
 
     def scroll(self, lines=1):
         y, x = self.pad.getyx()
