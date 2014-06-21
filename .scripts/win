@@ -53,7 +53,7 @@ class Client:
         self.HISTORY = 1000
         self.MAXUSERS = 500
 
-        self.nick = 'kallgren'
+        self.nick = nick
         users.append(self.nick)
         users.sort(key = str.lower)
 
@@ -169,30 +169,59 @@ class Client:
     def resize(self):
         self.MAXY, self.MAXX = self.stdscr.getmaxyx()
 
-        self.content.resize(self.MAXY - 2, self.MAXX - self.SIDEBARWIDTH - 1)
+        height = self.MAXY - 2
+        width = self.MAXX - self.SIDEBARWIDTH - 1
+        self.container.resize(height, width)
+        self.content.resize()
 
-        self.sidebar.mvwin(0, self.MAXX - self.SIDEBARWIDTH)
-        self.sidebar.resize(self.MAXY - 2, self.SIDEBARWIDTH)
+        width = 1
+        begin_x = self.MAXX - self.SIDEBARWIDTH - 1
+        self.divider.mvwin(0, begin_x)
+        self.divider.resize(height, width)
+        self.divider.erase()
+        self.divider.bkgd('|', curses.color_pair(1))
 
-        self.divider.mvwin(0, self.MAXX - self.SIDEBARWIDTH - 1)
-        self.divider.resize(self.MAXY - 2, 1)
+        width = self.SIDEBARWIDTH - 1
+        begin_x = self.MAXX - self.SIDEBARWIDTH
+        self.sidecontainer.mvwin(0, begin_x)
+        self.sidecontainer.resize(height, width)
+        self.sidebar.resize()
 
-        self.statusbar.mvwin(self.MAXY - 2, 0)
-        self.statusbar.resize(1, self.MAXX)
+        height = 1
+        width = self.MAXX
+        begin_y = self.MAXY - 2
+        self.statusbar.mvwin(begin_y, 0)
+        self.statusbar.resize(height, width)
+        self.statusbar.erase()
+        self.statusbar.bkgd(' ', curses.color_pair(17))
+        self.statusbar.addstr(' Chatting as ' + self.nick + ' [connected]')
 
-        self.bufwin.mvwin(self.MAXY - 1, 0)
-        self.bufwin.resize(1, self.MAXX)
+        begin_y = self.MAXY - 1
+        self.bufwin.mvwin(begin_y, 0)
+        self.bufwin.resize(height, width)
+        text = self.textbox.gather()
+        text = text.strip()
+        self.bufwin.erase()
+        try:
+            self.bufwin.addstr(text)
+        except curses.error:
+            pass
+        self.textbox = curses.textpad.Textbox(self.bufwin)
+        self.textbox.stripspaces = True        
 
+        self.content.end()
         self.content.refresh()
         self.divider.refresh()
+        self.content.home()
         self.sidebar.refresh()
         self.statusbar.refresh()
+        self.bufwin.refresh()
 
 class ScrollWindow:
     def __init__(self, parent, HISTORY=None):
         self.parent = parent
-        self.BEGY, self.BEGX = parent.getbegyx()
-        self.MAXY, self.MAXX = parent.getmaxyx()
+        self.BEGY, self.BEGX = self.parent.getbegyx()
+        self.MAXY, self.MAXX = self.parent.getmaxyx()
         self.MAXY += self.BEGY
         self.MAXX += self.BEGX
 
@@ -208,6 +237,13 @@ class ScrollWindow:
     def refresh(self):
         self.pad.refresh(self.position, 0, self.BEGY, self.BEGX,
                          self.MAXY - 1, self.MAXX)
+
+    def resize(self):
+        self.BEGY, self.BEGX = self.parent.getbegyx()
+        self.MAXY, self.MAXX = self.parent.getmaxyx()
+        self.MAXY += self.BEGY
+        self.MAXX += self.BEGX
+        self.pad.resize(self.HISTORY, self.MAXX)
 
     def addstr(self, string, attr=0):
         self.pad.addstr(string, attr)
@@ -241,4 +277,6 @@ def main(stdscr):
     Client(stdscr).start()
 
 if __name__ == '__main__':
+    global nick
+    nick = raw_input('Nick: ')
     curses.wrapper(main)
