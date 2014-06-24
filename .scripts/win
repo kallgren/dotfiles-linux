@@ -2,34 +2,12 @@
 
 import curses
 import curses.textpad
+import socket
+import threading
 
-users = [
-    'kallgren2',
-    'Kallgren3',
-    'kallgren4',
-    'bot',
-    'random',
-    'random',
-    'random',
-    'random',
-    'random',
-    'random',
-    'random',
-    'random',
-    'random',
-    'random',
-    'random',
-    'random',
-    'random',
-    'random',
-    'random',
-    'random',
-    'random',
-    'random',
-    'random',
-    '123456789123456',
-    'test'
-]
+address = 'localhost'
+port = 8040
+lock = threading.Lock()
 
 def completenick(beginning):
     return [user for user in users if user.startswith(beginning)]
@@ -37,9 +15,26 @@ def completenick(beginning):
 class Client:
     def __init__(self, stdscr):
         self.stdscr = stdscr
-        self.__init_colors__()
-        self.__init_variables__()
-        self.__init_windows__()
+        self.nick = nick
+        self.connected = False
+        if self.__init_connection__():
+            self.connected = True
+            self.__init_colors__()
+            self.__init_variables__()
+            self.__init_windows__()
+
+    def __init_connection__(self):
+        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server.connect((address, port))
+        self.server.send("CONNECT:" + self.nick + ":KGNChat Python Client\n")
+        response = self.server.recv(2040)
+        clean = response.rstrip('\n')
+        split = clean.split(':')
+        if split[0] == 'OK':
+            split.pop(0)
+            self.users = split
+            return True
+        return False
 
     def __init_colors__(self):
         curses.use_default_colors()
@@ -53,9 +48,8 @@ class Client:
         self.HISTORY = 1000
         self.MAXUSERS = 500
 
-        self.nick = nick
-        users.append(self.nick)
-        users.sort(key = str.lower)
+        self.users.append(self.nick)
+        self.users.sort(key = str.lower)
 
         self.compi = 0 # Completion index
         self.comptext = '' # Previous completion attempt
@@ -78,7 +72,7 @@ class Client:
         begin_x = self.MAXX - self.SIDEBARWIDTH
         self.sidecontainer = self.stdscr.subwin(height, width, 0, begin_x)
         self.sidebar = ScrollWindow(self.sidecontainer, self.MAXUSERS)
-        for user in users:
+        for user in self.users:
             self.sidebar.addstr(user + '\n')
 
         # Statusbar
@@ -101,13 +95,33 @@ class Client:
         self.statusbar.refresh()
         self.bufwin.refresh()
 
+    def listener(self):
+        while self.running:
+            message = self.server.recv(2040)
+            split = message.split(':')
+            if split[0] == 'MSG':
+                lock.acquire()
+                self.addmessage(split[1], split[2].rstrip('\n'))
+                self.content.refresh()
+                lock.release()
+            else:
+                lock.acquire()
+                self.content.addstr(message)
+                self.content.refresh()
+                lock.release()
+
     def start(self):
+        self.running = True
+        listener = threading.Thread(target=self.listener)
+        listener.start()
+
         while True:
             text = self.textbox.edit(self.validator)
             self.bufwin.erase()
             text = text.strip() # To get rid of a trailing whitespace
 
             if text == "/quit":
+                self.stop()
                 return
             elif text == "/clear":
                 self.content.erase()
@@ -115,13 +129,23 @@ class Client:
                 self.nick = text.split()[1]
             else:
                 try:
-                    self.content.addstr(self.nick, curses.color_pair(5))
-                    self.content.addstr(' | ', curses.color_pair(8))
-                    self.content.addstr(text + '\n')
+                    self.send_to_server(text)
+                    lock.acquire()
+                    self.addmessage(self.nick, text)
                     self.content.end()
+                    lock.release()
                 except curses.error:
                     pass            
             self.content.refresh()
+
+    def send_to_server(self, message):
+        self.server.send('SAY:' + message + '\n')
+
+    def addmessage(self, user, message):
+        self.content.addstr(user, curses.color_pair(5))
+        self.content.addstr(' | ', curses.color_pair(8))
+        self.content.addstr(message + '\n')
+        self.bufwin.refresh()
 
     def validator(self, ch):
         if ch == curses.KEY_RESIZE:
@@ -217,6 +241,10 @@ class Client:
         self.statusbar.refresh()
         self.bufwin.refresh()
 
+    def stop(self):
+        self.running = False
+        self.server.close()
+
 class ScrollWindow:
     def __init__(self, parent, HISTORY=None):
         self.parent = parent
@@ -274,7 +302,9 @@ class ScrollWindow:
             self.position = y - self.MAXY
 
 def main(stdscr):
-    Client(stdscr).start()
+    client = Client(stdscr)
+    if client.connected:
+        client.start()
 
 if __name__ == '__main__':
     global nick
