@@ -9,9 +9,6 @@ address = 'localhost'
 port = 8040
 lock = threading.Lock()
 
-def completenick(beginning):
-    return [user for user in users if user.startswith(beginning)]
-
 class Client:
     def __init__(self, stdscr):
         self.stdscr = stdscr
@@ -32,7 +29,10 @@ class Client:
         split = clean.split(':')
         if split[0] == 'OK':
             split.pop(0)
-            self.users = split
+            if split[0] != '': # Empty chat
+                self.users = split
+            else:
+                self.users = []
             return True
         return False
 
@@ -98,17 +98,69 @@ class Client:
     def listener(self):
         while self.running:
             message = self.server.recv(2040)
-            split = message.split(':')
+            clean = message.rstrip('\n')
+            split = clean.split(':')
             if split[0] == 'MSG':
+                split.pop(0)
+                user = split.pop(0)
+                message = ':'.join(split)
                 lock.acquire()
-                self.addmessage(split[1], split[2].rstrip('\n'))
+                atbottom = self.content.atbottom()
+                self.addmessage(user, message)
+                if atbottom:
+                    self.content.end()
+                self.content.refresh()
+                lock.release()
+            elif split[0] == 'JOIN':
+                user = split[1]
+                self.users.append(user)
+                lock.acquire()
+                atbottom = self.content.atbottom()
+                self.content.addstr(user + ' has joined the chat!\n',
+                                    curses.color_pair(3))
+                if atbottom:
+                    self.content.end()
+                self.content.refresh()
+                lock.release()
+                self.updatesidebar()
+            elif split[0] == 'LEAVE':
+                user = split[1]
+                self.users.remove(user)
+                lock.acquire()
+                atbottom = self.content.atbottom()
+                self.content.addstr(user + ' has left the chat.\n',
+                                    curses.color_pair(2))
+                if atbottom:
+                    self.content.end()
+                self.content.refresh()
+                lock.release()
+                self.updatesidebar()
+            elif split[0] == 'BROADCAST':
+                split.pop(0)
+                message = ':'.join(split)
+                lock.acquire()
+                atbottom = self.content.atbottom()
+                self.content.addstr('*** Server broadcast: ' + message + ' ***\n',
+                                    curses.color_pair(2))
+                if atbottom:
+                    self.content.end()
                 self.content.refresh()
                 lock.release()
             else:
                 lock.acquire()
+                atbottom = self.content.atbottom()
                 self.content.addstr(message)
+                if atbottom:
+                    self.content.end()
                 self.content.refresh()
                 lock.release()
+
+    def updatesidebar(self):
+        self.sidebar.erase()
+        self.users.sort(key = str.lower)
+        for user in self.users:
+            self.sidebar.addstr(user + '\n')
+        self.sidebar.refresh()
 
     def start(self):
         self.running = True
@@ -143,9 +195,15 @@ class Client:
 
     def addmessage(self, user, message):
         self.content.addstr(user, curses.color_pair(5))
-        self.content.addstr(' | ', curses.color_pair(8))
+        self.content.addstr(': ', curses.color_pair(8))
         self.content.addstr(message + '\n')
+        self.resetcursor()
+
+    def resetcursor(self):
         self.bufwin.refresh()
+
+    def completenick(self, beginning):
+        return [user for user in self.users if user.startswith(beginning)]
 
     def validator(self, ch):
         if ch == curses.KEY_RESIZE:
@@ -153,32 +211,32 @@ class Client:
         elif ch == curses.KEY_UP:
             self.content.scroll(-1)
             self.content.refresh()
-            self.bufwin.refresh()
+            self.resetcursor()
         elif ch == curses.KEY_DOWN:
             self.content.scroll(1)
             self.content.refresh()
-            self.bufwin.refresh()
+            self.resetcursor()
         elif ch == curses.KEY_PPAGE:
             self.sidebar.scroll(-1)
             self.sidebar.refresh()
-            self.bufwin.refresh()
+            self.resetcursor()
         elif ch == curses.KEY_NPAGE:
             self.sidebar.scroll(1)
             self.sidebar.refresh()
-            self.bufwin.refresh()
+            self.resetcursor()
         elif ch == curses.KEY_HOME:
             self.content.home()
             self.content.refresh()
-            self.bufwin.refresh()
+            self.resetcursor()
         elif ch == curses.KEY_END:
             self.content.end()
             self.content.refresh()
-            self.bufwin.refresh()
+            self.resetcursor()
         elif ch == curses.ascii.TAB:
             if self.compi == 0: # If there is a new string to complete
                 self.comptext = self.textbox.gather().strip()
             
-            completions = completenick(self.comptext)
+            completions = self.completenick(self.comptext)
             if len(completions) > 0:
                 self.bufwin.erase()
                 if len(completions) <= self.compi:
@@ -300,6 +358,10 @@ class ScrollWindow:
         y, x = self.pad.getyx()
         if y > self.MAXY:
             self.position = y - self.MAXY
+
+    def atbottom(self):
+        y, x = self.pad.getyx()
+        return y <= self.MAXY or y == (self.position + self.MAXY)
 
 def main(stdscr):
     client = Client(stdscr)
