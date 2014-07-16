@@ -1,0 +1,57 @@
+#!/usr/bin/env python
+
+import socket
+import sys
+import re
+import urllib2
+import random
+
+server = "localhost"
+botnick = "kgnbot"
+master = "kallgren"
+
+websites = [
+    "http://www.aftonbladet.se",
+    "http://www.dn.se",
+    "http://www.fz.se",
+    "http://movies.ign.com"
+]
+
+irc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+print "Connecting to", server + "..."
+irc.connect((server, 8040))
+
+irc.send("CONNECT:" + botnick + ":none\n")
+
+def send_to_channel(message):
+    irc.send('SAY:' + message + '\n')
+
+send_to_channel("WASSSUUUUUPPPP")
+
+while True:
+    text = irc.recv(2040)
+    sys.stdout.write(text)
+
+    if text.find('!hi') != -1:
+        t = text.split('!hi')
+        to = t[1].strip()
+        send_to_channel('Hello ' + str(to) + '!')
+
+    joinre = re.compile('^JOIN:' + master, re.M)
+    if joinre.search(text):
+        send_to_channel('Welcome back ' + master + '!')
+
+    if text.find('!news') != -1:
+        response = urllib2.urlopen(websites[3])
+        html = response.read()
+        reg = re.compile("listElmnt-storyHeadline\" href=\".*\">.*</a>", re.M)
+        results = reg.findall(html)
+        newsitems = []
+        for string in results:
+            sub = re.sub(r'listElmnt-storyHeadline" href="(.*)">(.*)</a>',
+                         r'\2 (\1)', string)
+            newsitems.append(sub)
+        send_to_channel(newsitems[random.randint(0, len(newsitems) - 1)])
+
+    if text.find(botnick) != -1:
+        send_to_channel('Hey! Don\'t mention my name!')
