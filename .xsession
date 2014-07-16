@@ -7,7 +7,7 @@
 
 # ip set wlan0 up &
 
-[[ $(grep vanilladark ~/.Xdefaults) != "" ]] && statusarg="dark"
+statusarg=$([[ $(grep vanillalight ~/.Xdefaults) != "" ]] && echo "" || echo dark)
 
 colorfile=$(cat ~/.Xdefaults | grep "\.colors" | cut -d '"' -f2)
 bgcolor=$(sed -n "s/\*color0: *//p" "$colorfile")
@@ -17,5 +17,5 @@ compton -b &
 
 xbindkeys &
 
-sh ~/.scripts/statusbar "$statusarg" &
+~/.scripts/statusbar "$statusarg" &
 exec wmfs
