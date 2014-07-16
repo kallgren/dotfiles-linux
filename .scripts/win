@@ -23,7 +23,7 @@ class Client:
     def __init_connection__(self):
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.connect((address, port))
-        self.server.send("CONNECT:" + self.nick + ":KGNChat Python Client\n")
+        self.server.send("CONNECT:" + self.nick + ":KGN Chat Python Client\n")
         response = self.server.recv(2040)
         clean = response.rstrip('\n')
         split = clean.split(':')
